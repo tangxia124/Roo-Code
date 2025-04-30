@@ -27,6 +27,7 @@ import { migrateSettings } from "./utils/migrateSettings"
 
 import { handleUri, registerCommands, registerCodeActions, registerTerminalActions } from "./activate"
 import { formatLanguage } from "./shared/language"
+import { initProviderSettingsFromDefault } from "./core/config/importExport"
 
 /**
  * Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -69,6 +70,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const contextProxy = await ContextProxy.getInstance(context)
 	const provider = new ClineProvider(context, outputChannel, "sidebar", contextProxy)
+
+	//初始化默认配置
+	const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+	if (!currentApiConfigName) {
+		const importOptions = {
+			providerSettingsManager: provider.providerSettingsManager,
+			contextProxy: provider.contextProxy,
+			customModesManager: provider.customModesManager,
+		}
+		initProviderSettingsFromDefault(importOptions)
+	}
+
 	telemetryService.setProvider(provider)
 
 	context.subscriptions.push(

@@ -640,7 +640,7 @@ export const vertexModels = {
 export const openAiModelInfoSaneDefaults: ModelInfo = {
 	maxTokens: -1,
 	contextWindow: 128_000,
-	supportsImages: true,
+	supportsImages: false,
 	supportsPromptCache: false,
 	inputPrice: 0,
 	outputPrice: 0,
