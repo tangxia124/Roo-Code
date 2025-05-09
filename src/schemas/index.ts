@@ -29,6 +29,9 @@ export const providerNames = [
 	"human-relay",
 	"fake-ai",
 	"xai",
+	"groq",
+	"chutes",
+	"litellm",
 ] as const
 
 export const providerNamesSchema = z.enum(providerNames)
@@ -59,6 +62,7 @@ export const languages = [
 	"it",
 	"ja",
 	"ko",
+	"nl",
 	"pl",
 	"pt-BR",
 	"ru",
@@ -287,6 +291,35 @@ export const customSupportPromptsSchema = z.record(z.string(), z.string().option
 export type CustomSupportPrompts = z.infer<typeof customSupportPromptsSchema>
 
 /**
+ * CommandExecutionStatus
+ */
+
+export const commandExecutionStatusSchema = z.discriminatedUnion("status", [
+	z.object({
+		executionId: z.string(),
+		status: z.literal("started"),
+		pid: z.number().optional(),
+		command: z.string(),
+	}),
+	z.object({
+		executionId: z.string(),
+		status: z.literal("output"),
+		output: z.string(),
+	}),
+	z.object({
+		executionId: z.string(),
+		status: z.literal("exited"),
+		exitCode: z.number().optional(),
+	}),
+	z.object({
+		executionId: z.string(),
+		status: z.literal("fallback"),
+	}),
+])
+
+export type CommandExecutionStatus = z.infer<typeof commandExecutionStatusSchema>
+
+/**
  * ExperimentId
  */
 
@@ -335,7 +368,6 @@ export const providerSettingsSchema = z.object({
 	awsRegion: z.string().optional(),
 	awsUseCrossRegionInference: z.boolean().optional(),
 	awsUsePromptCache: z.boolean().optional(),
-	awspromptCacheId: z.string().optional(),
 	awsProfile: z.string().optional(),
 	awsUseProfile: z.boolean().optional(),
 	awsCustomArn: z.string().optional(),
@@ -347,7 +379,6 @@ export const providerSettingsSchema = z.object({
 	// OpenAI
 	openAiBaseUrl: z.string().optional(),
 	openAiApiKey: z.string().optional(),
-	openAiHostHeader: z.string().optional(),
 	openAiLegacyFormat: z.boolean().optional(),
 	openAiR1FormatEnabled: z.boolean().optional(),
 	openAiModelId: z.string().optional(),
@@ -356,6 +387,8 @@ export const providerSettingsSchema = z.object({
 	azureApiVersion: z.string().optional(),
 	openAiStreamingEnabled: z.boolean().optional(),
 	enableReasoningEffort: z.boolean().optional(),
+	openAiHostHeader: z.string().optional(), // Keep temporarily for backward compatibility during migration
+	openAiHeaders: z.record(z.string(), z.string()).optional(),
 	// Ollama
 	ollamaModelId: z.string().optional(),
 	ollamaBaseUrl: z.string().optional(),
@@ -378,6 +411,7 @@ export const providerSettingsSchema = z.object({
 	googleGeminiBaseUrl: z.string().optional(),
 	// OpenAI Native
 	openAiNativeApiKey: z.string().optional(),
+	openAiNativeBaseUrl: z.string().optional(),
 	// Mistral
 	mistralApiKey: z.string().optional(),
 	mistralCodestralUrl: z.string().optional(),
@@ -392,13 +426,21 @@ export const providerSettingsSchema = z.object({
 	requestyModelId: z.string().optional(),
 	// X.AI (Grok)
 	xaiApiKey: z.string().optional(),
+	// Groq
+	groqApiKey: z.string().optional(),
+	// Chutes AI
+	chutesApiKey: z.string().optional(),
+	// LiteLLM
+	litellmBaseUrl: z.string().optional(),
+	litellmApiKey: z.string().optional(),
+	litellmModelId: z.string().optional(),
 	// Claude 3.7 Sonnet Thinking
 	modelMaxTokens: z.number().optional(),
 	modelMaxThinkingTokens: z.number().optional(),
 	// Generic
 	includeMaxTokens: z.boolean().optional(),
 	reasoningEffort: reasoningEffortsSchema.optional(),
-	promptCachingEnabled: z.boolean().optional(),
+	promptCachingDisabled: z.boolean().optional(),
 	diffEnabled: z.boolean().optional(),
 	fuzzyMatchThreshold: z.number().optional(),
 	modelTemperature: z.number().nullish(),
@@ -434,7 +476,6 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	awsRegion: undefined,
 	awsUseCrossRegionInference: undefined,
 	awsUsePromptCache: undefined,
-	awspromptCacheId: undefined,
 	awsProfile: undefined,
 	awsUseProfile: undefined,
 	awsCustomArn: undefined,
@@ -446,7 +487,6 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	// OpenAI
 	openAiBaseUrl: undefined,
 	openAiApiKey: undefined,
-	openAiHostHeader: undefined,
 	openAiLegacyFormat: undefined,
 	openAiR1FormatEnabled: undefined,
 	openAiModelId: undefined,
@@ -455,6 +495,8 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	azureApiVersion: undefined,
 	openAiStreamingEnabled: undefined,
 	enableReasoningEffort: undefined,
+	openAiHostHeader: undefined, // Keep temporarily for backward compatibility during migration
+	openAiHeaders: undefined,
 	// Ollama
 	ollamaModelId: undefined,
 	ollamaBaseUrl: undefined,
@@ -469,6 +511,7 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	googleGeminiBaseUrl: undefined,
 	// OpenAI Native
 	openAiNativeApiKey: undefined,
+	openAiNativeBaseUrl: undefined,
 	// Mistral
 	mistralApiKey: undefined,
 	mistralCodestralUrl: undefined,
@@ -487,7 +530,7 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	// Generic
 	includeMaxTokens: undefined,
 	reasoningEffort: undefined,
-	promptCachingEnabled: undefined,
+	promptCachingDisabled: undefined,
 	diffEnabled: undefined,
 	fuzzyMatchThreshold: undefined,
 	modelTemperature: undefined,
@@ -496,6 +539,14 @@ const providerSettingsRecord: ProviderSettingsRecord = {
 	fakeAi: undefined,
 	// X.AI (Grok)
 	xaiApiKey: undefined,
+	// Groq
+	groqApiKey: undefined,
+	// Chutes AI
+	chutesApiKey: undefined,
+	// LiteLLM
+	litellmBaseUrl: undefined,
+	litellmApiKey: undefined,
+	litellmModelId: undefined,
 }
 
 export const PROVIDER_SETTINGS_KEYS = Object.keys(providerSettingsRecord) as Keys<ProviderSettings>[]
@@ -688,6 +739,9 @@ export type SecretState = Pick<
 	| "unboundApiKey"
 	| "requestyApiKey"
 	| "xaiApiKey"
+	| "groqApiKey"
+	| "chutesApiKey"
+	| "litellmApiKey"
 >
 
 type SecretStateRecord = Record<Keys<SecretState>, undefined>
@@ -707,6 +761,9 @@ const secretStateRecord: SecretStateRecord = {
 	unboundApiKey: undefined,
 	requestyApiKey: undefined,
 	xaiApiKey: undefined,
+	groqApiKey: undefined,
+	chutesApiKey: undefined,
+	litellmApiKey: undefined,
 }
 
 export const SECRET_STATE_KEYS = Object.keys(secretStateRecord) as Keys<SecretState>[]
@@ -824,6 +881,10 @@ export const tokenUsageSchema = z.object({
 })
 
 export type TokenUsage = z.infer<typeof tokenUsageSchema>
+
+/**
+ * ToolName
+ */
 
 export const toolNames = [
 	"execute_command",
