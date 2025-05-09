@@ -35,7 +35,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
   },
   "globalSettings": {
     "lastShownAnnouncementId": "apr-23-2025-3-14",
-    "alwaysAllowReadOnly": false,
+    "alwaysAllowReadOnly": true,
     "alwaysAllowReadOnlyOutsideWorkspace": false,
     "alwaysAllowWrite": false,
     "alwaysAllowWriteOutsideWorkspace": false,
@@ -59,7 +59,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "maxOpenTabsContext": 20,
     "maxWorkspaceFiles": 200,
     "showRooIgnoredFiles": true,
-    "maxReadFileLine": 500,
+    "maxReadFileLine": -1,
     "terminalOutputLineLimit": 500,
     "terminalShellIntegrationTimeout": 5000,
     "terminalCommandDelay": 0,

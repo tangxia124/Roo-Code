@@ -1,7 +1,7 @@
 import { HTMLAttributes } from "react"
 import { useAppTranslation } from "@/i18n/TranslationContext"
 import { Trans } from "react-i18next"
-import { Info, Download, Upload, TriangleAlert } from "lucide-react"
+import { Info, Download, TriangleAlert } from "lucide-react"
 
 import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 
@@ -59,10 +59,10 @@ export const About = ({ version, telemetrySetting, setTelemetrySetting, classNam
 				</div>
 
 				<div className="flex flex-wrap items-center gap-2 mt-2">
-					<Button onClick={() => vscode.postMessage({ type: "exportSettings" })} className="w-28">
+					{/* <Button onClick={() => vscode.postMessage({ type: "exportSettings" })} className="w-28">
 						<Upload className="p-0.5" />
 						{t("settings:footer.settings.export")}
-					</Button>
+					</Button> */}
 					<Button onClick={() => vscode.postMessage({ type: "importSettings" })} className="w-28">
 						<Download className="p-0.5" />
 						{t("settings:footer.settings.import")}
