@@ -9,10 +9,16 @@ import axios from "axios"
 import pWaitFor from "p-wait-for"
 import * as vscode from "vscode"
 
-import type { GlobalState, ProviderName, ProviderSettings, RooCodeSettings } from "../../schemas"
+import { GlobalState, ProviderSettings, RooCodeSettings } from "../../schemas"
 import { t } from "../../i18n"
 import { setPanel } from "../../activate/registerCommands"
-import { requestyDefaultModelId, openRouterDefaultModelId, glamaDefaultModelId } from "../../shared/api"
+import {
+	ProviderName,
+	ApiConfiguration,
+	requestyDefaultModelId,
+	openRouterDefaultModelId,
+	glamaDefaultModelId,
+} from "../../shared/api"
 import { findLast } from "../../shared/array"
 import { supportPrompt } from "../../shared/support-prompt"
 import { GlobalFileNames } from "../../shared/globalFileNames"
@@ -757,6 +763,7 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 	 * @param newMode The mode to switch to
 	 */
 	public async handleModeSwitch(newMode: Mode) {
+		// Capture mode switch telemetry event
 		const cline = this.getCurrentCline()
 
 		if (cline) {
@@ -773,19 +780,24 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 		// Update listApiConfigMeta first to ensure UI has latest data
 		await this.updateGlobalState("listApiConfigMeta", listApiConfig)
 
-		// If this mode has a saved config, use it.
+		// If this mode has a saved config, use it
 		if (savedConfigId) {
-			const profile = listApiConfig.find(({ id }) => id === savedConfigId)
+			const config = listApiConfig?.find((c) => c.id === savedConfigId)
 
-			if (profile?.name) {
-				await this.activateProviderProfile({ name: profile.name })
+			if (config?.name) {
+				const apiConfig = await this.providerSettingsManager.loadConfig(config.name)
+
+				await Promise.all([
+					this.updateGlobalState("currentApiConfigName", config.name),
+					this.updateApiConfiguration(apiConfig),
+				])
 			}
 		} else {
-			// If no saved config for this mode, save current config as default.
+			// If no saved config for this mode, save current config as default
 			const currentApiConfigName = this.getGlobalState("currentApiConfigName")
 
 			if (currentApiConfigName) {
-				const config = listApiConfig.find((c) => c.name === currentApiConfigName)
+				const config = listApiConfig?.find((c) => c.name === currentApiConfigName)
 
 				if (config?.id) {
 					await this.providerSettingsManager.setModeConfig(newMode, config.id)
@@ -793,18 +805,6 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 			}
 		}
 
-		await this.postStateToWebview()
-	}
-
-	async activateProviderProfile(args: { name: string } | { id: string }) {
-		const { name, ...providerSettings } = await this.providerSettingsManager.activateProfile(args)
-
-		await Promise.all([
-			this.contextProxy.setValue("listApiConfigMeta", await this.providerSettingsManager.listConfig()),
-			this.contextProxy.setValue("currentApiConfigName", name),
-		])
-
-		await this.updateApiConfiguration(providerSettings)
 		await this.postStateToWebview()
 	}
 
@@ -937,7 +937,7 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 			throw error
 		}
 
-		const newConfiguration: ProviderSettings = {
+		const newConfiguration: ApiConfiguration = {
 			...apiConfiguration,
 			apiProvider: "openrouter",
 			openRouterApiKey: apiKey,
@@ -967,7 +967,7 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 
 		const { apiConfiguration, currentApiConfigName } = await this.getState()
 
-		const newConfiguration: ProviderSettings = {
+		const newConfiguration: ApiConfiguration = {
 			...apiConfiguration,
 			apiProvider: "glama",
 			glamaApiKey: apiKey,
@@ -982,7 +982,7 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 	async handleRequestyCallback(code: string) {
 		let { apiConfiguration, currentApiConfigName } = await this.getState()
 
-		const newConfiguration: ProviderSettings = {
+		const newConfiguration: ApiConfiguration = {
 			...apiConfiguration,
 			apiProvider: "requesty",
 			requestyApiKey: code,
@@ -994,7 +994,7 @@ export class ClineProvider extends EventEmitter<ClineProviderEvents> implements 
 
 	// Save configuration
 
-	async upsertApiConfiguration(configName: string, apiConfiguration: ProviderSettings) {
+	async upsertApiConfiguration(configName: string, apiConfiguration: ApiConfiguration) {
 		try {
 			await this.providerSettingsManager.saveConfig(configName, apiConfiguration)
 			const listApiConfig = await this.providerSettingsManager.listConfig()
