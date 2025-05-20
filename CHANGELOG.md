@@ -1,8 +1,46 @@
 # Roo Code Changelog
 
+## [3.17.2] - 2025-05-15
+
+- Revert "Switch to the new Roo message parser" (appears to cause a tool parsing bug)
+- Lock the versions of vsce and ovsx
+
+## [3.17.1] - 2025-05-15
+
+- Fix the display of the command to execute during approval
+- Fix incorrect reserved tokens calculation on OpenRouter (thanks @daniel-lxs!)
+
+## [3.17.0] - 2025-05-14
+
+- Enable Gemini implicit caching
+- Add "when to use" section to mode definitions to enable better orchestration
+- Add experimental feature to intelligently condense the task context instead of truncating it
+- Fix one of the causes of the gray screen issue (thanks @xyOz-dev!)
+- Focus improvements for better UI interactions (thanks Cline!)
+- Switch to the new Roo message parser for improved performance (thanks Cline!)
+- Enable source maps for improved debugging (thanks @KJ7LNW!)
+- Update OpenRouter provider to use provider-specific model info (thanks @daniel-lxs!)
+- Fix Requesty cost/token reporting (thanks @dtrugman!)
+- Improve command execution UI
+- Add more in-app links to relevant documentation
+- Update the new task tool description and the ask mode custom instructions in the system prompt
+- Add IPC types to roo-code.d.ts
+- Add build VSIX workflow to pull requests (thanks @SmartManoj!)
+- Improve apply_diff tool to intelligently deduce line numbers (thanks @samhvw8!)
+- Fix command validation for shell array indexing (thanks @KJ7LNW!)
+- Handle diagnostics that point at a directory URI (thanks @daniel-lxs!)
+- Fix "Current ask promise was ignored" error (thanks @zxdvd!)
+
+## [3.16.6] - 2025-05-12
+
+- Restore "Improve provider profile management in the external API"
+- Fix to subtask sequencing (thanks @wkordalski!)
+- Fix webview terminal output processing error (thanks @KJ7LNW!)
+- Fix textarea empty string fallback logic (thanks @elianiva!)
+
 ## [3.16.5] - 2025-05-10
 
-- Revert profile management changes until we track down a bug with defaults
+- Revert "Improve provider profile management in the external API" until we track down a bug with defaults
 
 ## [3.16.4] - 2025-05-09
 
