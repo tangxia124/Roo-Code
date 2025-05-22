@@ -12,7 +12,7 @@
 		"test": "turbo test --log-order grouped --output-logs new-only",
 		"format": "turbo format --log-order grouped --output-logs new-only",
 		"clean": "turbo clean --log-order grouped --output-logs new-only && rimraf dist out bin .vite-port .turbo",
-		"build": "pnpm --filter roo-cline vsix",
+		"build": "pnpm --filter roo-code-ex vsix",
 		"build:nightly": "pnpm --filter @roo-code/vscode-nightly vsix",
 		"changeset": "changeset",
 		"knip": "pnpm --filter @roo-code/build build && knip --include files",

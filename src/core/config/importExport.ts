@@ -100,11 +100,11 @@ export const initProviderSettingsFromDefault = async ({
 }: ImportOptions) => {
 	const schema = z.object({
 		providerProfiles: providerProfilesSchema,
-		globalSettings: globalSettingsSchema,
+		globalSettings: globalSettingsSchema.optional(),
 	})
 
 	try {
-		const { providerProfiles: newProviderProfiles, globalSettings } = schema.parse(
+		const { providerProfiles: newProviderProfiles, globalSettings = {} } = schema.parse(
 			JSON.parse(DEFAULT_PROVIDER_SETTINGS),
 		)
 
@@ -141,7 +141,16 @@ export const initProviderSettingsFromDefault = async ({
 
 		return { providerProfiles, globalSettings, success: true }
 	} catch (e) {
-		return { success: false }
+		let error = "Unknown error"
+
+		if (e instanceof ZodError) {
+			error = e.issues.map((issue) => `[${issue.path.join(".")}]: ${issue.message}`).join("\n")
+			telemetryService.captureSchemaValidationError({ schemaName: "ImportExport", error: e })
+		} else if (e instanceof Error) {
+			error = e.message
+		}
+
+		return { success: false, error }
 	}
 }
 

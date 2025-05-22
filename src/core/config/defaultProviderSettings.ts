@@ -5,7 +5,6 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "apiConfigs": {
       "htf_default": {
         "apiProvider": "openai",
-        "apiModelId": "DeepSeek-R1-671B",
         "openAiBaseUrl": "http://llm.htffund.com/v1",
         "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
         "openAiR1FormatEnabled": true,
@@ -19,6 +18,22 @@ export const DEFAULT_PROVIDER_SETTINGS = `
           "outputPrice": 0
         },
         "id": "bm92f1yu3ik"
+      },
+	  "htf_default_image": {
+        "openAiBaseUrl": "http://llm.htffund.com/v1",
+        "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
+        "openAiR1FormatEnabled": false,
+        "openAiModelId": "Qwen2.5-VL-72B-Instruct-8k",
+        "openAiCustomModelInfo": {
+          "maxTokens": -1,
+          "contextWindow": 128000,
+          "supportsImages": true,
+          "supportsPromptCache": false,
+          "inputPrice": 0,
+          "outputPrice": 0
+        },
+        "apiProvider": "openai",
+        "id": "2tp0dy5v504"
       }
     },
     "modeApiConfigs": {
@@ -30,7 +45,8 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     },
     "migrations": {
       "rateLimitSecondsMigrated": true,
-      "diffSettingsMigrated": true
+      "diffSettingsMigrated": true,
+      "openAiHeadersMigrated": true
     }
   },
   "globalSettings": {
@@ -56,11 +72,11 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "ttsSpeed": 1,
     "soundEnabled": false,
     "soundVolume": 0.5,
-    "maxOpenTabsContext": 20,
-    "maxWorkspaceFiles": 200,
+    "maxOpenTabsContext": 30,
+    "maxWorkspaceFiles": 300,
     "showRooIgnoredFiles": true,
     "maxReadFileLine": -1,
-    "terminalOutputLineLimit": 500,
+    "terminalOutputLineLimit": 1000,
     "terminalShellIntegrationTimeout": 5000,
     "terminalCommandDelay": 0,
     "terminalPowershellCounter": false,
@@ -70,11 +86,12 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "terminalZdotdir": false,
     "terminalCompressProgressBar": true,
     "experiments": {
-      "powerSteering": false
+      "powerSteering": false,
+	    "autoCondenseContext": false
     },
     "language": "zh-CN",
     "telemetrySetting": "disabled",
-    "mcpEnabled": true
+    "mcpEnabled": false
   }
 }
 `
