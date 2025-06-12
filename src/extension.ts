@@ -28,6 +28,7 @@ import { McpServerManager } from "./services/mcp/McpServerManager"
 import { CodeIndexManager } from "./services/code-index/manager"
 import { migrateSettings } from "./utils/migrateSettings"
 import { API } from "./extension/api"
+import { initProviderSettingsFromDefault } from "./core/config/importExport"
 
 import {
 	handleUri,
@@ -104,6 +105,18 @@ export async function activate(context: vscode.ExtensionContext) {
 	}
 
 	const provider = new ClineProvider(context, outputChannel, "sidebar", contextProxy, codeIndexManager)
+
+	//初始化默认配置
+	const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+	if (!currentApiConfigName) {
+		const importOptions = {
+			providerSettingsManager: provider.providerSettingsManager,
+			contextProxy: provider.contextProxy,
+			customModesManager: provider.customModesManager,
+		}
+		initProviderSettingsFromDefault(importOptions)
+	}
+
 	TelemetryService.instance.setProvider(provider)
 
 	if (codeIndexManager) {

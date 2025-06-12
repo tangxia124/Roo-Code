@@ -65,6 +65,7 @@ import { webviewMessageHandler } from "./webviewMessageHandler"
 import { WebviewMessage } from "../../shared/WebviewMessage"
 import { EMBEDDING_MODEL_PROFILES } from "../../shared/embeddingModels"
 import { ProfileValidator } from "../../shared/ProfileValidator"
+import { initProviderSettingsFromDefault } from "../config/importExport"
 
 /**
  * https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -1639,6 +1640,13 @@ export class ClineProvider
 		await this.providerSettingsManager.resetAllConfigs()
 		await this.customModesManager.resetCustomModes()
 		await this.removeClineFromStack()
+		//导入默认配置
+		const importOptions = {
+			providerSettingsManager: this.providerSettingsManager,
+			contextProxy: this.contextProxy,
+			customModesManager: this.customModesManager,
+		}
+		await initProviderSettingsFromDefault(importOptions)
 		await this.postStateToWebview()
 		await this.postMessageToWebview({ type: "action", action: "chatButtonClicked" })
 	}
