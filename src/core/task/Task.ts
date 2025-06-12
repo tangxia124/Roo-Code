@@ -82,6 +82,7 @@ import { processUserContentMentions } from "../mentions/processUserContentMentio
 import { ApiMessage } from "../task-persistence/apiMessages"
 import { getMessagesSinceLastSummary, summarizeConversation } from "../condense"
 import { maybeRemoveImageBlocks } from "../../api/transform/image-cleaning"
+import { askStatistics, responseStatistics } from "../../htf_stat/fetch"
 
 export type ClineEvents = {
 	message: [{ action: "created" | "updated"; message: ClineMessage }]
@@ -1186,6 +1187,9 @@ export class Task extends EventEmitter<ClineEvents> {
 			showRooIgnoredFiles,
 		})
 
+		//增加用户提问统计
+		askStatistics({ uuid: this.taskId, request: , model: this.api.getModel().id,  action:"ask"})
+
 		const environmentDetails = await getEnvironmentDetails(this, includeFileDetails)
 
 		// Add environment details as its own text block, separate from tool
@@ -1468,6 +1472,9 @@ export class Task extends EventEmitter<ClineEvents> {
 				})
 
 				TelemetryService.instance.captureConversationMessage(this.taskId, "assistant")
+
+				//增加模型返回统计
+				responseStatistics({ uuid: this.taskId, response: assistantMessage, model: this.api.getModel().id,  action:"ask"})
 
 				// NOTE: This comment is here for future reference - this was a
 				// workaround for `userMessageContent` not getting set to true.

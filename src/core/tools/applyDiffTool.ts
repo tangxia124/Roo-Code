@@ -11,6 +11,7 @@ import { formatResponse } from "../prompts/responses"
 import { fileExistsAtPath } from "../../utils/fs"
 import { RecordSource } from "../context-tracking/FileContextTrackerTypes"
 import { unescapeHtmlEntities } from "../../utils/text-normalization"
+import { applyStatistics } from "../../htf_stat/fetch"
 
 export async function applyDiffTool(
 	cline: Task,
@@ -136,6 +137,9 @@ export async function applyDiffTool(
 
 				pushToolResult(formattedError)
 				return
+			} else {
+				//增加接受代码统计
+				applyStatistics({ applyContext: diffContent, model: cline.api.getModel().id,  action:"acceptRooCodeSolution"})
 			}
 
 			cline.consecutiveMistakeCount = 0
