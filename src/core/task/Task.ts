@@ -334,6 +334,11 @@ export class Task extends EventEmitter<ClineEvents> {
 				properties: { taskId: this.taskId, message },
 			})
 		}
+
+		if (message && message.type === "say" && (message.say === "text" || message.say === "user_feedback" || message.say === "user_feedback_diff") && message.text) {
+			//增加用户提问统计
+			askStatistics({ uuid: this.taskId, request: message.text, model: this.api.getModel().id, action: "ask" })
+		}
 	}
 
 	public async overwriteClineMessages(newMessages: ClineMessage[]) {
@@ -1187,9 +1192,6 @@ export class Task extends EventEmitter<ClineEvents> {
 			showRooIgnoredFiles,
 		})
 
-		//增加用户提问统计
-		askStatistics({ uuid: this.taskId, request: , model: this.api.getModel().id,  action:"ask"})
-
 		const environmentDetails = await getEnvironmentDetails(this, includeFileDetails)
 
 		// Add environment details as its own text block, separate from tool
@@ -1474,7 +1476,7 @@ export class Task extends EventEmitter<ClineEvents> {
 				TelemetryService.instance.captureConversationMessage(this.taskId, "assistant")
 
 				//增加模型返回统计
-				responseStatistics({ uuid: this.taskId, response: assistantMessage, model: this.api.getModel().id,  action:"ask"})
+				responseStatistics({ uuid: this.taskId, response: assistantMessage, model: this.api.getModel().id, action: "ask" })
 
 				// NOTE: This comment is here for future reference - this was a
 				// workaround for `userMessageContent` not getting set to true.

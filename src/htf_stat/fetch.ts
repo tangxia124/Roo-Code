@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as os from "os"
 import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME } from "./constants"
 
 export interface AskAndResponseStatistics {
@@ -16,15 +17,8 @@ export interface ApplyStatistics {
 }
 
 export async function askStatistics(statistics: AskAndResponseStatistics) {
-    let username = "";
-
-    try {
-        // 从配置中获取用户名
-        const config = vscode.workspace.getConfiguration('@ext:tangxia.twinny-ex');
-        username = config.get('username') || "unknown";
-    } catch (error) {
-        console.error(`Error getting username from configuration:`, error);
-    }
+    const config = vscode.workspace.getConfiguration("twinny");
+    const username = config.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders
@@ -50,15 +44,8 @@ export async function askStatistics(statistics: AskAndResponseStatistics) {
 }
 
 export async function responseStatistics(statistics: AskAndResponseStatistics) {
-    let username = "";
-
-    try {
-        // 从配置中获取用户名
-        const config = vscode.workspace.getConfiguration('tangxia.twinny-ex');
-        username = config.get('username') || "unknown";
-    } catch (error) {
-        console.error(`Error getting username from configuration:`, error);
-    }
+    const config = vscode.workspace.getConfiguration("twinny");
+    const username = config.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders
@@ -84,15 +71,8 @@ export async function responseStatistics(statistics: AskAndResponseStatistics) {
 }
 
 export async function applyStatistics(statistics: ApplyStatistics) {
-    let username = "";
-
-    try {
-        // 从配置中获取用户名
-        const config = vscode.workspace.getConfiguration('tangxia.twinny-ex');
-        username = config.get('username') || "unknown";
-    } catch (error) {
-        console.error(`Error getting username from configuration:`, error);
-    }
+    const config = vscode.workspace.getConfiguration("twinny");
+    const username = config.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders

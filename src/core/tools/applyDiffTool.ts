@@ -137,9 +137,6 @@ export async function applyDiffTool(
 
 				pushToolResult(formattedError)
 				return
-			} else {
-				//增加接受代码统计
-				applyStatistics({ applyContext: diffContent, model: cline.api.getModel().id,  action:"acceptRooCodeSolution"})
 			}
 
 			cline.consecutiveMistakeCount = 0
