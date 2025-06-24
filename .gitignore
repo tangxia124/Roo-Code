@@ -26,9 +26,7 @@ bin/
 docs/_site/
 
 # Dotenv
-.env
-.env.*
-!.env.*.sample
+
 
 # Logging
 logs
