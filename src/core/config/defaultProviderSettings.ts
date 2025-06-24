@@ -4,6 +4,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "currentApiConfigName": "htf_default",
     "apiConfigs": {
       "htf_default": {
+        "includeMaxTokens": false,
         "enableReasoningEffort": false,
         "apiProvider": "openai",
         "openAiBaseUrl": "http://llm.htffund.com/v1",
@@ -21,6 +22,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         "id": "bm92f1yu3ik"
       },
 	    "htf_default_image": {
+        "includeMaxTokens": false,
         "enableReasoningEffort": false,
         "openAiBaseUrl": "http://llm.htffund.com/v1",
         "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
@@ -63,6 +65,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "alwaysAllowReadOnlyOutsideWorkspace": false,
     "alwaysAllowWrite": false,
     "alwaysAllowWriteOutsideWorkspace": false,
+    "alwaysAllowWriteProtected": false,
     "writeDelayMs": 1000,
     "alwaysAllowBrowser": false,
     "alwaysApproveResubmit": false,
@@ -97,6 +100,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "maxReadFileLine": -1,
     "terminalOutputLineLimit": 1000,
     "terminalShellIntegrationTimeout": 5000,
+    "terminalShellIntegrationDisabled": false,
     "terminalCommandDelay": 0,
     "terminalPowershellCounter": false,
     "terminalZshClearEolMark": true,
@@ -106,8 +110,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "terminalCompressProgressBar": true,
     "experiments": {
       "powerSteering": false,
-	    "concurrentFileReads": true,
-      "disableCompletionCommand": true
+	    "multiFileApplyDiff": false
     },
     "codebaseIndexModels": {
       "openai": {
@@ -153,10 +156,12 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     },
     "language": "zh-CN",
     "telemetrySetting": "disabled",
-    "mcpEnabled": false,
+    "mcpEnabled": true,
     "mode": "code",
     "customModes": [],
-    "enhancementApiConfigId": "bm92f1yu3ik"
+    "customSupportPrompts": {},
+    "enhancementApiConfigId": "bm92f1yu3ik",
+    "profileThresholds": {}
   }
 }
 `
