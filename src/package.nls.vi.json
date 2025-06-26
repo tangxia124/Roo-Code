@@ -23,6 +23,7 @@
 	"command.marketplace.title": "Marketplace",
 	"command.openInEditor.title": "Mở trong Trình Soạn Thảo",
 	"command.settings.title": "Cài Đặt",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "Tài Liệu",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Các lệnh có thể được thực thi tự động khi 'Luôn phê duyệt các thao tác thực thi' được bật",

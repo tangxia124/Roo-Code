@@ -23,6 +23,7 @@
 	"command.marketplace.title": "Marketplace",
 	"command.openInEditor.title": "Düzenleyicide Aç",
 	"command.settings.title": "Ayarlar",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "Dokümantasyon",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "'Her zaman yürütme işlemlerini onayla' etkinleştirildiğinde otomatik olarak yürütülebilen komutlar",

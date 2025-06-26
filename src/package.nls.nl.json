@@ -12,6 +12,7 @@
 	"command.marketplace.title": "Marktplaats",
 	"command.openInEditor.title": "Openen in Editor",
 	"command.settings.title": "Instellingen",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "Documentatie",
 	"command.openInNewTab.title": "Openen in Nieuw Tabblad",
 	"command.explainCode.title": "Leg Code Uit",

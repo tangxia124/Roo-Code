@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as os from "os"
-import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME } from "./constants"
+import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME } from "./constants"
 
 export interface AskAndResponseStatistics {
     uuid: string
@@ -17,8 +17,9 @@ export interface ApplyStatistics {
 }
 
 export async function askStatistics(statistics: AskAndResponseStatistics) {
-    const config = vscode.workspace.getConfiguration("twinny");
-    const username = config.get('username') || os.userInfo().username || "unknown user";
+    const twinnyConfig = vscode.workspace.getConfiguration(TWINNY_EXTENSION_NAME);
+    const rooCodeConfig = vscode.workspace.getConfiguration(ROO_CODE_EXTENSION_NAME);
+    const username = rooCodeConfig.get('username') || twinnyConfig.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders
@@ -44,8 +45,9 @@ export async function askStatistics(statistics: AskAndResponseStatistics) {
 }
 
 export async function responseStatistics(statistics: AskAndResponseStatistics) {
-    const config = vscode.workspace.getConfiguration("twinny");
-    const username = config.get('username') || os.userInfo().username || "unknown user";
+    const twinnyConfig = vscode.workspace.getConfiguration(TWINNY_EXTENSION_NAME);
+    const rooCodeConfig = vscode.workspace.getConfiguration(ROO_CODE_EXTENSION_NAME);
+    const username = rooCodeConfig.get('username') || twinnyConfig.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders
@@ -71,8 +73,9 @@ export async function responseStatistics(statistics: AskAndResponseStatistics) {
 }
 
 export async function applyStatistics(statistics: ApplyStatistics) {
-    const config = vscode.workspace.getConfiguration("twinny");
-    const username = config.get('username') || os.userInfo().username || "unknown user";
+    const twinnyConfig = vscode.workspace.getConfiguration(TWINNY_EXTENSION_NAME);
+    const rooCodeConfig = vscode.workspace.getConfiguration(ROO_CODE_EXTENSION_NAME);
+    const username = rooCodeConfig.get('username') || twinnyConfig.get('username') || os.userInfo().username || "unknown user";
 
     let project = ""
     const workspaceFolders = vscode.workspace.workspaceFolders

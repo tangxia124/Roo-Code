@@ -112,6 +112,11 @@
 				"icon": "$(settings-gear)"
 			},
 			{
+				"command": "roo-code-ex.customSettingsButtonClicked",
+				"title": "%command.customSettings.title%",
+				"icon": "$(key)"
+			},
+			{
 				"command": "roo-code-ex.openInNewTab",
 				"title": "%command.openInNewTab.title%",
 				"category": "%configuration.title%"
@@ -253,6 +258,11 @@
 					"command": "roo-code-ex.settingsButtonClicked",
 					"group": "navigation@8",
 					"when": "view == roo-code-ex.SidebarProvider"
+				},
+				{
+					"command": "roo-code-ex.customSettingsButtonClicked",
+					"group": "navigation@9",
+					"when": "view == roo-code-ex.SidebarProvider"
 				}
 			],
 			"editor/title": [
@@ -289,6 +299,11 @@
 				{
 					"command": "roo-code-ex.settingsButtonClicked",
 					"group": "navigation@7",
+					"when": "activeWebviewPanelId == roo-code-ex.TabPanelProvider"
+				},
+				{
+					"command": "roo-code-ex.customSettingsButtonClicked",
+					"group": "navigation@8",
 					"when": "activeWebviewPanelId == roo-code-ex.TabPanelProvider"
 				}
 			]
@@ -344,6 +359,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "%settings.rooCodeCloudEnabled.description%"
+				},
+				"roo-code-ex.username": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "请输入域账号，一般为姓名拼音"
 				}
 			}
 		}

@@ -12,6 +12,7 @@
 	"command.marketplace.title": "マーケットプレイス",
 	"command.openInEditor.title": "エディタで開く",
 	"command.settings.title": "設定",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "ドキュメント",
 	"command.openInNewTab.title": "新しいタブで開く",
 	"command.explainCode.title": "コードの説明",

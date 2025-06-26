@@ -23,6 +23,7 @@
 	"command.marketplace.title": "Mercado",
 	"command.openInEditor.title": "Abrir en Editor",
 	"command.settings.title": "Configuración",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "Documentación",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Comandos que pueden ejecutarse automáticamente cuando 'Aprobar siempre operaciones de ejecución' está activado",
