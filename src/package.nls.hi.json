@@ -24,6 +24,7 @@
 	"command.marketplace.title": "मार्केटप्लेस",
 	"command.openInEditor.title": "एडिटर में खोलें",
 	"command.settings.title": "सेटिंग्स",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "दस्तावेज़ीकरण",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "वे कमांड जो स्वचालित रूप से निष्पादित की जा सकती हैं जब 'हमेशा निष्पादन संचालन को स्वीकृत करें' सक्रिय हो",

@@ -11,6 +11,7 @@ import { formatResponse } from "../prompts/responses"
 import { fileExistsAtPath } from "../../utils/fs"
 import { RecordSource } from "../context-tracking/FileContextTrackerTypes"
 import { unescapeHtmlEntities } from "../../utils/text-normalization"
+import { applyStatistics } from "../../htf_stat/fetch"
 
 export async function applyDiffToolLegacy(
 	cline: Task,

@@ -24,6 +24,7 @@
 	"command.marketplace.title": "Marktplatz",
 	"command.openInEditor.title": "Im Editor Öffnen",
 	"command.settings.title": "Einstellungen",
+	"command.customSettings.title": "Custom Settings",
 	"command.documentation.title": "Dokumentation",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Befehle, die automatisch ausgeführt werden können, wenn 'Ausführungsoperationen immer genehmigen' aktiviert ist",

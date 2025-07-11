@@ -13,6 +13,7 @@ import { ClineSayTool } from "../../shared/ExtensionMessage"
 import { Task } from "../../core/task/Task"
 
 import { DecorationController } from "./DecorationController"
+import { applyStatistics } from "../../htf_stat/fetch"
 
 export const DIFF_VIEW_URI_SCHEME = "cline-diff"
 export const DIFF_VIEW_LABEL_CHANGES = "Original ↔ Roo's Changes"
@@ -234,6 +235,16 @@ export class DiffViewProvider {
 		// Normalize EOL characters without trimming content
 		const normalizedEditedContent = editedContent.replace(/\r\n|\n/g, newContentEOL)
 
+		//增加接受代码统计
+		const diffs = diff.diffLines(this.originalContent || "", normalizedEditedContent)
+		const addedContent = diffs
+			.filter(part => part.added)
+			.map(part => part.value)
+			.join(newContentEOL);
+		if (addedContent) {
+			applyStatistics({ applyContext: addedContent, model: "DeepSeek-R1-671B", action: "acceptRooCodeSolution" })
+		}
+
 		// Just in case the new content has a mix of varying EOL characters.
 		const normalizedNewContent = this.newContent.replace(/\r\n|\n/g, newContentEOL)
 
@@ -298,8 +309,8 @@ export class DiffViewProvider {
 						"Proceed with the task using these changes as the new baseline.",
 						...(this.userEdits
 							? [
-									"If the user's edits have addressed part of the task or changed the requirements, adjust your approach accordingly.",
-								]
+								"If the user's edits have addressed part of the task or changed the requirements, adjust your approach accordingly.",
+							]
 							: []),
 					],
 				},

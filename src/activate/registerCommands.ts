@@ -138,6 +138,12 @@ const getCommandsMap = ({ context, outputChannel, provider }: RegisterCommandOpt
 		// Also explicitly post the visibility message to trigger scroll reliably
 		visibleProvider.postMessageToWebview({ type: "action", action: "didBecomeVisible" })
 	},
+	customSettingsButtonClicked: () => {
+		vscode.commands.executeCommand(
+        "workbench.action.openSettings",
+        "@ext:tangxia.roo-code-ex"
+      )
+	},
 	historyButtonClicked: () => {
 		const visibleProvider = getVisibleProviderOrLog(outputChannel)
 
