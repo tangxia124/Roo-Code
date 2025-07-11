@@ -13,6 +13,7 @@
 	"command.openInEditor.title": "エディタで開く",
 	"command.settings.title": "設定",
 	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "ドキュメント",
 	"command.openInNewTab.title": "新しいタブで開く",
 	"command.explainCode.title": "コードの説明",

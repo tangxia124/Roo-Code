@@ -13,6 +13,7 @@
 	"command.openInEditor.title": "Buka di Editor",
 	"command.settings.title": "Pengaturan",
 	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Dokumentasi",
 	"command.openInNewTab.title": "Buka di Tab Baru",
 	"command.explainCode.title": "Jelaskan Kode",

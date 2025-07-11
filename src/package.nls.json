@@ -13,6 +13,7 @@
 	"command.openInEditor.title": "Open in Editor",
 	"command.settings.title": "Settings",
 	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Documentation",
 	"command.openInNewTab.title": "Open In New Tab",
 	"command.explainCode.title": "Explain Code",
