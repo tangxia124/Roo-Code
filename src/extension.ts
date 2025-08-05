@@ -40,6 +40,7 @@ import {
 	CodeActionProvider,
 } from "./activate"
 import { initializeI18n } from "./i18n"
+import { executeDailyStat } from "./htf_stat/git"
 
 /**
  * Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -220,6 +221,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			context.subscriptions.push(watcher)
 		})
 	}
+
+	//统计本地代码变动情况
+	const dailyStat = setInterval(executeDailyStat, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(dailyStat)
+	})
 
 	return new API(outputChannel, provider, socketPath, enableLogging)
 }
