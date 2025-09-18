@@ -31,6 +31,7 @@ import { MdmService } from "./services/mdm/MdmService"
 import { migrateSettings } from "./utils/migrateSettings"
 import { autoImportSettings } from "./utils/autoImportSettings"
 import { API } from "./extension/api"
+import { initProviderSettingsFromDefault } from "./core/config/importExport"
 
 import {
 	handleUri,
@@ -40,6 +41,7 @@ import {
 	CodeActionProvider,
 } from "./activate"
 import { initializeI18n } from "./i18n"
+import { executeDailyStat } from "./htf_stat/git"
 
 /**
  * Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -124,6 +126,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Initialize the provider *before* the Roo Code Cloud service.
 	const provider = new ClineProvider(context, outputChannel, "sidebar", contextProxy, mdmService)
+
+	// 初始化默认配置
+	const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+	if (!currentApiConfigName) {
+		const importOptions = {
+			providerSettingsManager: provider.providerSettingsManager,
+			contextProxy: provider.contextProxy,
+			customModesManager: provider.customModesManager,
+		}
+		initProviderSettingsFromDefault(importOptions)
+	}
 
 	// Initialize Roo Code Cloud service.
 	const postStateListener = () => ClineProvider.getVisibleInstance()?.postStateToWebview()
@@ -323,6 +336,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			},
 		})
 	}
+
+	//统计本地代码变动情况
+	const dailyStat = setInterval(executeDailyStat, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(dailyStat)
+	})
 
 	return new API(outputChannel, provider, socketPath, enableLogging)
 }

@@ -25,6 +25,8 @@
 	"command.openInEditor.title": "Im Editor Öffnen",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Einstellungen",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Dokumentation",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Befehle, die automatisch ausgeführt werden können, wenn 'Ausführungsoperationen immer genehmigen' aktiviert ist",

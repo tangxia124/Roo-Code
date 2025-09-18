@@ -69,10 +69,10 @@ export const About = ({ telemetrySetting, setTelemetrySetting, className, ...pro
 				</div>
 
 				<div className="flex flex-wrap items-center gap-2 mt-2">
-					<Button onClick={() => vscode.postMessage({ type: "exportSettings" })} className="w-28">
+					{/* <Button onClick={() => vscode.postMessage({ type: "exportSettings" })} className="w-28">
 						<Upload className="p-0.5" />
 						{t("settings:footer.settings.export")}
-					</Button>
+					</Button> */}
 					<Button onClick={() => vscode.postMessage({ type: "importSettings" })} className="w-28">
 						<Download className="p-0.5" />
 						{t("settings:footer.settings.import")}

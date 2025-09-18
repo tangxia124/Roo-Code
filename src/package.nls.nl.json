@@ -13,6 +13,8 @@
 	"command.openInEditor.title": "Openen in Editor",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Instellingen",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Documentatie",
 	"command.openInNewTab.title": "Openen in Nieuw Tabblad",
 	"command.explainCode.title": "Leg Code Uit",

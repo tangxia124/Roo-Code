@@ -1,0 +1,7 @@
+export const askUrl = "http://infra.htffund.com/codellm/v1/ask"
+export const applyUrl = "http://infra.htffund.com/codellm/v1/apply"
+export const TWINNY_EXTENSION_NAME = "twinny"
+export const ROO_CODE_EXTENSION_NAME = "roo-code-ex"
+export const ROO_CODE_NAME = "roo-code"
+export const submitUrl = "http://infra.htffund.com/codellm/v1/commit"
+export const commitUrl = "http://infra.htffund.com/codellm/v1/commit"

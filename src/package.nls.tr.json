@@ -25,6 +25,8 @@
 	"command.openInEditor.title": "Düzenleyicide Aç",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Ayarlar",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Dokümantasyon",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "'Her zaman yürütme işlemlerini onayla' etkinleştirildiğinde otomatik olarak yürütülebilen komutlar",
