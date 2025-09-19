@@ -30,7 +30,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         "openAiModelId": "Qwen2.5-VL-72B-Instruct-8k",
         "openAiCustomModelInfo": {
           "maxTokens": -1,
-          "contextWindow": 128000,
+          "contextWindow": 32000,
           "supportsImages": true,
           "supportsPromptCache": false,
           "inputPrice": 0,
@@ -54,13 +54,18 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "migrations": {
       "rateLimitSecondsMigrated": true,
       "diffSettingsMigrated": true,
-      "openAiHeadersMigrated": true
+      "openAiHeadersMigrated": true,
+      "consecutiveMistakeLimitMigrated": true,
+      "todoListEnabledMigrated": true
     }
   },
   "globalSettings": {
-    "lastShownAnnouncementId": "apr-23-2025-3-14",
+    "lastShownAnnouncementId": "sep-2025-roo-code-cloud",
+    "openRouterImageApiKey": "",
+    "openRouterImageGenerationSelectedModel": "",
     "condensingApiConfigId": "bm92f1yu3ik",
     "customCondensingPrompt": "",
+    "autoApprovalEnabled": true,
     "alwaysAllowReadOnly": true,
     "alwaysAllowReadOnlyOutsideWorkspace": false,
     "alwaysAllowWrite": false,
@@ -85,9 +90,12 @@ export const DEFAULT_PROVIDER_SETTINGS = `
       "git diff",
       "git show"
     ],
+    "deniedCommands": [],
     "autoCondenseContext": true,
     "autoCondenseContextPercent": 100,
     "maxConcurrentFileReads": 15,
+    "includeDiagnosticMessages": true,
+    "maxDiagnosticMessages": 50,
     "browserToolEnabled": false,
     "browserViewportSize": "900x600",
     "screenshotQuality": 75,
@@ -101,8 +109,10 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "maxWorkspaceFiles": 300,
     "showRooIgnoredFiles": true,
     "maxReadFileLine": -1,
+    "maxImageFileSize": 10,
+    "maxTotalImageSize": 50,
     "terminalOutputLineLimit": 1000,
-    "terminalShellIntegrationTimeout": 5000,
+    "terminalShellIntegrationTimeout": 100000,
     "terminalShellIntegrationDisabled": false,
     "terminalCommandDelay": 0,
     "terminalPowershellCounter": false,
@@ -112,8 +122,11 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "terminalZdotdir": false,
     "terminalCompressProgressBar": true,
     "experiments": {
-      "powerSteering": false,
-	    "multiFileApplyDiff": false
+      "powerSteering": true,
+	    "multiFileApplyDiff": false,
+      "preventFocusDisruption": false,
+      "imageGeneration": false,
+      "runSlashCommand": false
     },
     "codebaseIndexModels": {
       "openai": {
@@ -158,8 +171,48 @@ export const DEFAULT_PROVIDER_SETTINGS = `
       "gemini": {
         "text-embedding-004": {
           "dimension": 768
+        },
+        "gemini-embedding-001": {
+          "dimension": 3072
         }
-      }
+      },
+      "mistral": {
+          "codestral-embed-2505": {
+              "dimension": 1536
+          }
+      },
+      "vercel-ai-gateway": {
+          "openai/text-embedding-3-small": {
+              "dimension": 1536
+          },
+          "openai/text-embedding-3-large": {
+              "dimension": 3072
+          },
+          "openai/text-embedding-ada-002": {
+              "dimension": 1536
+          },
+          "cohere/embed-v4.0": {
+              "dimension": 1024
+          },
+          "google/gemini-embedding-001": {
+              "dimension": 3072
+          },
+          "google/text-embedding-005": {
+              "dimension": 768
+          },
+          "google/text-multilingual-embedding-002": {
+              "dimension": 768
+          },
+          "amazon/titan-embed-text-v2": {
+              "dimension": 1024
+          },
+          "mistral/codestral-embed": {
+              "dimension": 1536
+          },
+          "mistral/mistral-embed": {
+              "dimension": 1024
+          }
+      }      
     },
     "codebaseIndexConfig": {
       "codebaseIndexEnabled": false,
@@ -175,6 +228,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "customModes": [],
     "customSupportPrompts": {},
     "enhancementApiConfigId": "bm92f1yu3ik",
+    "includeTaskHistoryInEnhance": true,
     "profileThresholds": {},
     "hasOpenedModeSelector": true
   }

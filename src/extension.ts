@@ -42,6 +42,7 @@ import {
 } from "./activate"
 import { initializeI18n } from "./i18n"
 import { executeDailyStat } from "./htf_stat/git"
+import { ROO_CODE_NAME, versionUrl } from "./htf_stat/constants"
 
 /**
  * Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -343,6 +344,12 @@ export async function activate(context: vscode.ExtensionContext) {
 		dispose: () => clearInterval(dailyStat)
 	})
 
+	//定时任务检查更新
+	const checkUpdate = setInterval(checkExtensionVersion, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(checkUpdate)
+	})
+
 	return new API(outputChannel, provider, socketPath, enableLogging)
 }
 
@@ -381,4 +388,38 @@ export async function deactivate() {
 	await McpServerManager.cleanup(extensionContext)
 	TelemetryService.instance.shutdown()
 	TerminalRegistry.cleanup()
+}
+
+let isPopupShowing = false;
+
+export async function checkExtensionVersion() {
+	if (isPopupShowing) return;
+
+	try {
+		const localVersion = vscode.extensions.getExtension("tangxia.roo-code-ex")
+			?.packageJSON.version as string
+		const response = await fetch(versionUrl + "?pluginName=" + ROO_CODE_NAME)
+		const remoteVersion = await response.text();
+
+		if (localVersion < remoteVersion) {
+			isPopupShowing = true;
+			const action = await vscode.window.showInformationMessage(
+				`roo-code-ex 插件有新版本 (${remoteVersion}) 可用，请前往插件市场或者访问gitlab.htffund.com下载最新版`,
+				{ modal: true },
+				"立即下载最新版本"
+			);
+
+			if (action === "立即下载最新版本") {
+				vscode.env.openExternal(
+					vscode.Uri.parse(
+						"http://gitlab.htffund.com/common-resource/plugin"
+					)
+				);
+			}
+		}
+	} catch (err) {
+		// Ignore error info
+	} finally {
+		isPopupShowing = false;
+	}
 }

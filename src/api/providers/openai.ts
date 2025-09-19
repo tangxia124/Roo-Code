@@ -471,7 +471,8 @@ export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiH
 		}
 
 		const response = await axios.get(`${trimmedBaseUrl}/models`, config)
-		const modelsArray = response.data?.data?.map((model: any) => model.id) || []
+		const modelsArray = response.data?.data?.map((model: any) => model.id)
+			.filter((id: string) => id.toLocaleLowerCase().includes("deepseek") || id.toLocaleLowerCase().includes("qwen")) || []
 		return [...new Set<string>(modelsArray)]
 	} catch (error) {
 		return []
