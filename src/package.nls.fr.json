@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "Une équipe complète de développement d'agents IA dans votre éditeur.",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"command.newTask.title": "Nouvelle Tâche",
 	"command.explainCode.title": "Expliquer le Code",
 	"command.fixCode.title": "Corriger le Code",

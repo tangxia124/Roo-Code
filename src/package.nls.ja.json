@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "エディタ内のAIエージェントによる開発チーム。",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"views.contextMenu.label": "Roo Code",
 	"views.terminalMenu.label": "Roo Code",
 	"views.activitybar.title": "Roo Code",

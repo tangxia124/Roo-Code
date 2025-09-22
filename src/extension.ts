@@ -404,7 +404,7 @@ export async function checkExtensionVersion() {
 		if (localVersion < remoteVersion) {
 			isPopupShowing = true;
 			const action = await vscode.window.showInformationMessage(
-				`roo-code-ex 插件有新版本 (${remoteVersion}) 可用，请前往插件市场或者访问gitlab.htffund.com下载最新版`,
+				`HTF Code 插件有新版本 (${remoteVersion}) 可用，请前往插件市场搜索【HTF Code】或者点击下方按钮访问gitlab下载【roo-code-ex】最新版`,
 				{ modal: true },
 				"立即下载最新版本"
 			);

@@ -4,7 +4,7 @@
 	"description": "%extension.description%",
 	"version": "3.28.3",
 	"publisher": "tangxia",
-	"icon": "assets/icons/icon.png",
+	"icon": "assets/icons/icon-192x192.png",
 	"galleryBanner": {
 		"color": "#617A91",
 		"theme": "dark"
@@ -30,7 +30,6 @@
 		"Testing"
 	],
 	"keywords": [
-		"cline",
 		"claude",
 		"dev",
 		"mcp",
@@ -41,9 +40,7 @@
 		"chatgpt",
 		"sonnet",
 		"ai",
-		"llama",
-		"roo code",
-		"roocode"
+		"llama"
 	],
 	"activationEvents": [
 		"onLanguage",
