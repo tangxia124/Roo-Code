@@ -9,8 +9,8 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         "apiProvider": "openai",
         "openAiBaseUrl": "http://llm.htffund.com/v1",
         "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
-        "openAiR1FormatEnabled": true,
-        "openAiModelId": "DeepSeek-R1-671B",
+        "openAiR1FormatEnabled": false,
+        "openAiModelId": "DeepSeek-V3-671B",
         "openAiCustomModelInfo": {
           "maxTokens": -1,
           "contextWindow": 128000,
@@ -20,6 +20,24 @@ export const DEFAULT_PROVIDER_SETTINGS = `
           "outputPrice": 0
         },
         "id": "bm92f1yu3ik"
+      },
+      "htf_default_think": {
+        "includeMaxTokens": false,
+        "enableReasoningEffort": false,
+        "apiProvider": "openai",
+        "openAiBaseUrl": "http://llm.htffund.com/v1",
+        "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
+        "openAiR1FormatEnabled": false,
+        "openAiModelId": "deepseek-reasoner",
+        "openAiCustomModelInfo": {
+          "maxTokens": -1,
+          "contextWindow": 128000,
+          "supportsImages": false,
+          "supportsPromptCache": false,
+          "inputPrice": 0,
+          "outputPrice": 0
+        },
+        "id": "bm92f1yu3il"
       },
 	    "htf_default_image": {
         "includeMaxTokens": false,

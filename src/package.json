@@ -2,7 +2,7 @@
 	"name": "roo-code-ex",
 	"displayName": "%extension.displayName%",
 	"description": "%extension.description%",
-	"version": "3.28.3",
+	"version": "3.28.4",
 	"publisher": "tangxia",
 	"icon": "assets/icons/icon-192x192.png",
 	"galleryBanner": {
