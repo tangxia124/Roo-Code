@@ -78,7 +78,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     }
   },
   "globalSettings": {
-    "lastShownAnnouncementId": "sep-2025-roo-code-cloud",
+    "lastShownAnnouncementId": "oct-2025-v3.29.0-cloud-agents",
     "openRouterImageApiKey": "",
     "openRouterImageGenerationSelectedModel": "",
     "condensingApiConfigId": "bm92f1yu3ik",
@@ -112,6 +112,8 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "autoCondenseContext": true,
     "autoCondenseContextPercent": 100,
     "maxConcurrentFileReads": 15,
+    "includeCurrentTime": true,
+    "includeCurrentCost": false,
     "includeDiagnosticMessages": true,
     "maxDiagnosticMessages": 50,
     "browserToolEnabled": false,
@@ -119,6 +121,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "screenshotQuality": 75,
     "remoteBrowserEnabled": false,
     "enableCheckpoints": true,
+    "checkpointTimeout": 15,
     "ttsEnabled": false,
     "ttsSpeed": 1,
     "soundEnabled": false,
@@ -130,6 +133,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "maxImageFileSize": 10,
     "maxTotalImageSize": 50,
     "terminalOutputLineLimit": 1000,
+    "terminalOutputCharacterLimit": 100000,
     "terminalShellIntegrationTimeout": 100000,
     "terminalShellIntegrationDisabled": false,
     "terminalCommandDelay": 0,
@@ -247,6 +251,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "customSupportPrompts": {},
     "enhancementApiConfigId": "bm92f1yu3ik",
     "includeTaskHistoryInEnhance": true,
+    "reasoningBlockCollapsed": true,
     "profileThresholds": {},
     "hasOpenedModeSelector": true
   }
