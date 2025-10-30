@@ -122,6 +122,7 @@ const MAX_EXPONENTIAL_BACKOFF_SECONDS = 600 // 10 minutes
 const DEFAULT_USAGE_COLLECTION_TIMEOUT_MS = 5000 // 5 seconds
 const FORCED_CONTEXT_REDUCTION_PERCENT = 75 // Keep 75% of context (remove 25%) on context window errors
 const MAX_CONTEXT_WINDOW_RETRIES = 3 // Maximum retries for context window errors
+import { askStatistics, responseStatistics } from "../../htf_stat/fetch"
 
 export interface TaskOptions extends CreateTaskOptions {
 	provider: ClineProvider
@@ -642,6 +643,11 @@ export class Task extends EventEmitter<TaskEvents> implements TaskLike {
 				event: TelemetryEventName.TASK_MESSAGE,
 				properties: { taskId: this.taskId, message },
 			})
+		}
+
+		if (message && message.type === "say" && (message.say === "text" || message.say === "user_feedback" || message.say === "user_feedback_diff") && message.text) {
+			//增加用户提问统计
+			askStatistics({ uuid: this.taskId, request: message.text, model: this.api.getModel().id, action: "ask" })
 		}
 	}
 
@@ -2341,6 +2347,9 @@ export class Task extends EventEmitter<TaskEvents> implements TaskLike {
 					})
 
 					TelemetryService.instance.captureConversationMessage(this.taskId, "assistant")
+
+					//增加模型返回统计
+					responseStatistics({ uuid: this.taskId, response: assistantMessage, model: this.api.getModel().id, action: "ask" })
 
 					// NOTE: This comment is here for future reference - this was a
 					// workaround for `userMessageContent` not getting set to true.

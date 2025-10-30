@@ -13,6 +13,7 @@ import { ProviderSettingsManager, providerProfilesSchema } from "./ProviderSetti
 import { ContextProxy } from "./ContextProxy"
 import { CustomModesManager } from "./CustomModesManager"
 import { t } from "../../i18n"
+import { DEFAULT_PROVIDER_SETTINGS } from "./defaultProviderSettings"
 
 export type ImportOptions = {
 	providerSettingsManager: ProviderSettingsManager
@@ -140,6 +141,67 @@ export const importSettingsFromFile = async (
 		contextProxy,
 		customModesManager,
 	})
+}
+
+export const initProviderSettingsFromDefault = async ({
+	providerSettingsManager,
+	contextProxy,
+	customModesManager,
+}: ImportOptions) => {
+	const schema = z.object({
+		providerProfiles: providerProfilesSchema,
+		globalSettings: globalSettingsSchema.optional(),
+	})
+
+	try {
+		const { providerProfiles: newProviderProfiles, globalSettings = {} } = schema.parse(
+			JSON.parse(DEFAULT_PROVIDER_SETTINGS),
+		)
+
+		const providerProfiles = {
+			currentApiConfigName: newProviderProfiles.currentApiConfigName,
+			apiConfigs: {
+				...newProviderProfiles.apiConfigs,
+			},
+			modeApiConfigs: {
+				...newProviderProfiles.modeApiConfigs,
+			},
+		}
+
+		await Promise.all(
+			(globalSettings.customModes ?? []).map((mode) => customModesManager.updateCustomMode(mode.slug, mode)),
+		)
+
+		await providerSettingsManager.import(newProviderProfiles)
+		await contextProxy.setValues(globalSettings)
+
+		// Set the current provider.
+		const currentProviderName = providerProfiles.currentApiConfigName
+		const currentProvider = providerProfiles.apiConfigs[currentProviderName]
+		contextProxy.setValue("currentApiConfigName", currentProviderName)
+
+		// TODO: It seems like we don't need to have the provider settings in
+		// the proxy; we can just use providerSettingsManager as the source of
+		// truth.
+		if (currentProvider) {
+			contextProxy.setProviderSettings(currentProvider)
+		}
+
+		contextProxy.setValue("listApiConfigMeta", await providerSettingsManager.listConfig())
+
+		return { providerProfiles, globalSettings, success: true }
+	} catch (e) {
+		let error = "Unknown error"
+
+		if (e instanceof ZodError) {
+			error = e.issues.map((issue) => `[${issue.path.join(".")}]: ${issue.message}`).join("\n")
+			TelemetryService.instance.captureSchemaValidationError({ schemaName: "ImportExport", error: e })
+		} else if (e instanceof Error) {
+			error = e.message
+		}
+
+		return { success: false, error }
+	}
 }
 
 export const exportSettings = async ({ providerSettingsManager, contextProxy }: ExportOptions) => {

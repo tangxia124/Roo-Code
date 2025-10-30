@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "에디터에서 작동하는 AI 에이전트 개발팀.",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"command.newTask.title": "새 작업",
 	"command.explainCode.title": "코드 설명",
 	"command.fixCode.title": "코드 수정",
@@ -26,6 +26,8 @@
 	"command.openInEditor.title": "에디터에서 열기",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "설정",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "문서",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "'항상 실행 작업 승인' 이 활성화되어 있을 때 자동으로 실행할 수 있는 명령어",
