@@ -230,6 +230,18 @@
 	"feedback": {
 		"youSaid": "你说"
 	},
+	"taskFeedback": {
+		"title": "反馈",
+		"description": "发送关于此任务的反馈",
+		"dialogTitle": "发送反馈",
+		"dialogDescription": "您的反馈有助于我们改进 HTFCode。当前任务的对话历史记录和您的评论将发送给我们的团队。",
+		"placeholder": "在此输入您的反馈...",
+		"submit": "提交反馈",
+		"submitting": "提交中...",
+		"cancel": "取消",
+		"success": "反馈提交成功",
+		"error": "提交反馈失败"
+	},
 	"mcp": {
 		"wantsToUseTool": "Roo想在{{serverName}} MCP上使用工具",
 		"wantsToAccessResource": "Roo想访问{{serverName}} MCP服务上的资源"

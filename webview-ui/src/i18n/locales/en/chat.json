@@ -248,6 +248,18 @@
 	"feedback": {
 		"youSaid": "You said"
 	},
+	"taskFeedback": {
+		"title": "Feedback",
+		"description": "Send feedback about this task",
+		"dialogTitle": "Send Feedback",
+		"dialogDescription": "Your feedback helps us improve HTFCode. The current task conversation history and your comments will be sent to our team.",
+		"placeholder": "Enter your feedback here...",
+		"submit": "Submit Feedback",
+		"submitting": "Submitting...",
+		"cancel": "Cancel",
+		"success": "Feedback submitted successfully",
+		"error": "Failed to submit feedback"
+	},
 	"mcp": {
 		"wantsToUseTool": "Roo wants to use a tool on the {{serverName}} MCP server",
 		"wantsToAccessResource": "Roo wants to access a resource on the {{serverName}} MCP server"

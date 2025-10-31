@@ -59,7 +59,7 @@ import { EMBEDDING_MODEL_PROFILES } from "../../shared/embeddingModels"
 import { ProfileValidator } from "../../shared/ProfileValidator"
 
 import { Terminal } from "../../integrations/terminal/Terminal"
-import { downloadTask } from "../../integrations/misc/export-markdown"
+import { downloadTask, getTaskMarkdownString } from "../../integrations/misc/export-markdown"
 import { getTheme } from "../../integrations/theme/getTheme"
 import WorkspaceTracker from "../../integrations/workspace/WorkspaceTracker"
 
@@ -1536,6 +1536,11 @@ export class ClineProvider
 	async exportTaskWithId(id: string) {
 		const { historyItem, apiConversationHistory } = await this.getTaskWithId(id)
 		await downloadTask(historyItem.ts, apiConversationHistory)
+	}
+
+	async getTaskMarkdown(id: string): Promise<string> {
+		const { apiConversationHistory } = await this.getTaskWithId(id)
+		return await getTaskMarkdownString(apiConversationHistory)
 	}
 
 	/* Condenses a task's message history to use fewer tokens. */
