@@ -252,7 +252,7 @@
 		"title": "Feedback",
 		"description": "Send feedback about this task",
 		"dialogTitle": "Send Feedback",
-		"dialogDescription": "Your feedback helps us improve HTFCode. The current task conversation history and your comments will be sent to our team.",
+		"dialogDescription": "Your feedback helps us improve HTF Code. The current task conversation history and your comments will be sent to our team.",
 		"placeholder": "Enter your feedback here...",
 		"submit": "Submit Feedback",
 		"submitting": "Submitting...",

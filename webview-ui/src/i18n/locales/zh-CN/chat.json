@@ -234,7 +234,7 @@
 		"title": "反馈",
 		"description": "发送关于此任务的反馈",
 		"dialogTitle": "发送反馈",
-		"dialogDescription": "您的反馈有助于我们改进 HTFCode。当前任务的对话历史记录和您的评论将发送给我们的团队。",
+		"dialogDescription": "您的反馈有助于我们改进 HTF Code，当前任务的对话记录和您的反馈留言将发送给我们的团队。",
 		"placeholder": "在此输入您的反馈...",
 		"submit": "提交反馈",
 		"submitting": "提交中...",

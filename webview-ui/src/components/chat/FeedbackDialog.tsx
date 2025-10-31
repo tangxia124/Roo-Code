@@ -25,7 +25,7 @@ export const FeedbackDialog = ({ open, onOpenChange, taskId }: FeedbackDialogPro
 	const { t } = useTranslation()
 
 	const handleSubmit = async () => {
-		if (!feedbackText.trim() || !taskId) return
+		if (!taskId) return
 
 		setIsSubmitting(true)
 		try {
@@ -80,7 +80,7 @@ export const FeedbackDialog = ({ open, onOpenChange, taskId }: FeedbackDialogPro
 					</Button>
 					<Button
 						onClick={handleSubmit}
-						disabled={!feedbackText.trim() || isSubmitting}
+						disabled={isSubmitting}
 					>
 						{isSubmitting ? t("chat:taskFeedback.submitting") : t("chat:taskFeedback.submit")}
 					</Button>
