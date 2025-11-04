@@ -31,7 +31,7 @@ import { MdmService } from "./services/mdm/MdmService"
 import { migrateSettings } from "./utils/migrateSettings"
 import { autoImportSettings } from "./utils/autoImportSettings"
 import { API } from "./extension/api"
-import { initProviderSettingsFromDefault } from "./core/config/importExport"
+import { initProviderSettingsFromDefault, syncRemoteConfig } from "./core/config/importExport"
 
 import {
 	handleUri,
@@ -131,13 +131,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// 初始化默认配置
 	const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+	const importOptions = {
+		providerSettingsManager: provider.providerSettingsManager,
+		contextProxy: provider.contextProxy,
+		customModesManager: provider.customModesManager,
+	}
 	if (!currentApiConfigName) {
-		const importOptions = {
-			providerSettingsManager: provider.providerSettingsManager,
-			contextProxy: provider.contextProxy,
-			customModesManager: provider.customModesManager,
-		}
 		initProviderSettingsFromDefault(importOptions)
+	} else {
+		syncRemoteConfig(importOptions)
 	}
 
 	// Initialize Roo Code Cloud service.

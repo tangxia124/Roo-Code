@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as os from "os"
-import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME } from "./constants"
+import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME, htfDefaultConfigkUrl } from "./constants"
+import { REMOTE_FALLBACK_PROVIDER_SETTINGS } from "../core/config/defaultProviderSettings"
 
 export interface AskAndResponseStatistics {
     uuid: string
@@ -83,7 +84,7 @@ export async function applyStatistics(statistics: ApplyStatistics) {
         project = workspaceFolders[0].name
     }
 
-    fetch(applyUrl, {
+    await fetch(applyUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -97,4 +98,29 @@ export async function applyStatistics(statistics: ApplyStatistics) {
             source: ROO_CODE_NAME
         })
     })
+}
+
+export async function fetchRemoteConfig(): Promise<string> {
+    try {
+        const response = await fetch(htfDefaultConfigkUrl)
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const configText = await response.text()
+
+        if (!configText || configText.trim() === '') {
+            throw new Error('Empty response from remote config')
+        }
+
+        try {
+            JSON.parse(configText)
+        } catch (parseError) {
+            throw new Error('Invalid JSON format in remote config')
+        }
+        return configText
+    } catch (err) {
+        return REMOTE_FALLBACK_PROVIDER_SETTINGS
+    }
 }

@@ -257,3 +257,41 @@ export const DEFAULT_PROVIDER_SETTINGS = `
   }
 }
 `
+export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
+{
+    "providerProfiles": {
+        "currentApiConfigName": "htf_default",
+        "apiConfigs": {
+            "htf_default": {
+                "includeMaxTokens": false,
+                "enableReasoningEffort": false,
+                "apiProvider": "openai",
+                "openAiBaseUrl": "http://llm.htffund.com/v1",
+                "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
+                "openAiR1FormatEnabled": false,
+                "openAiModelId": "DeepSeek-V3-671B",
+                "openAiCustomModelInfo": {
+                    "maxTokens": -1,
+                    "contextWindow": 128000,
+                    "supportsImages": false,
+                    "supportsPromptCache": false,
+                    "inputPrice": 0,
+                    "outputPrice": 0
+                },
+                "id": "bm92f1yu3ik"
+            }
+        },
+        "modeApiConfigs": {
+            "code": "bm92f1yu3ik",
+            "architect": "bm92f1yu3ik",
+            "ask": "bm92f1yu3ik",
+            "debug": "bm92f1yu3ik",
+            "orchestrator": "bm92f1yu3ik",
+            "test": "bm92f1yu3ik",
+            "design-engineer": "bm92f1yu3ik",
+            "release-engineer": "bm92f1yu3ik",
+            "translate": "bm92f1yu3ik"
+        }
+    }
+}
+`
