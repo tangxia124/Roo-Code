@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as os from "os"
-import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME, htfDefaultConfigkUrl } from "./constants"
+import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME, htfDefaultConfigUrl } from "./constants"
 import { REMOTE_FALLBACK_PROVIDER_SETTINGS } from "../core/config/defaultProviderSettings"
 
 export interface AskAndResponseStatistics {
@@ -101,8 +101,12 @@ export async function applyStatistics(statistics: ApplyStatistics) {
 }
 
 export async function fetchRemoteConfig(): Promise<string> {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 500)
     try {
-        const response = await fetch(htfDefaultConfigkUrl)
+        const response = await fetch(htfDefaultConfigUrl, {
+            signal: controller.signal
+        })
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
@@ -114,13 +118,12 @@ export async function fetchRemoteConfig(): Promise<string> {
             throw new Error('Empty response from remote config')
         }
 
-        try {
-            JSON.parse(configText)
-        } catch (parseError) {
-            throw new Error('Invalid JSON format in remote config')
-        }
+        JSON.parse(configText)
+
         return configText
     } catch (err) {
         return REMOTE_FALLBACK_PROVIDER_SETTINGS
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
