@@ -78,7 +78,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     }
   },
   "globalSettings": {
-    "lastShownAnnouncementId": "oct-2025-v3.29.0-cloud-agents",
+    "lastShownAnnouncementId": "nov-2025-v3.30.0-pr-fixer",
     "openRouterImageApiKey": "",
     "openRouterImageGenerationSelectedModel": "",
     "condensingApiConfigId": "bm92f1yu3ik",
