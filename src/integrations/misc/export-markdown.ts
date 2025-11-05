@@ -41,6 +41,20 @@ export async function downloadTask(dateTs: number, conversationHistory: Anthropi
 	}
 }
 
+export async function getTaskMarkdownString(conversationHistory: Anthropic.MessageParam[]): Promise<string> {
+	// Generate markdown
+	const markdownContent = conversationHistory
+		.map((message) => {
+			const role = message.role === "user" ? "**User:**" : "**Assistant:**"
+			const content = Array.isArray(message.content)
+				? message.content.map((block) => formatContentBlockToMarkdown(block)).join("\n")
+				: message.content
+			return `${role}\n\n${content}\n\n`
+		})
+		.join("---\n\n")
+	return markdownContent
+}
+
 export function formatContentBlockToMarkdown(block: Anthropic.Messages.ContentBlockParam): string {
 	switch (block.type) {
 		case "text":

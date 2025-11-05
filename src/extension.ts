@@ -31,6 +31,7 @@ import { MdmService } from "./services/mdm/MdmService"
 import { migrateSettings } from "./utils/migrateSettings"
 import { autoImportSettings } from "./utils/autoImportSettings"
 import { API } from "./extension/api"
+import { initProviderSettingsFromDefault, syncRemoteConfig } from "./core/config/importExport"
 
 import {
 	handleUri,
@@ -41,6 +42,8 @@ import {
 } from "./activate"
 import { initializeI18n } from "./i18n"
 import { flushModels, getModels } from "./api/providers/fetchers/modelCache"
+import { executeDailyStat } from "./htf_stat/git"
+import { ROO_CODE_NAME, versionUrl } from "./htf_stat/constants"
 
 /**
  * Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -125,6 +128,19 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Initialize the provider *before* the Roo Code Cloud service.
 	const provider = new ClineProvider(context, outputChannel, "sidebar", contextProxy, mdmService)
+
+	// 初始化默认配置
+	const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+	const importOptions = {
+		providerSettingsManager: provider.providerSettingsManager,
+		contextProxy: provider.contextProxy,
+		customModesManager: provider.customModesManager,
+	}
+	if (!currentApiConfigName) {
+		initProviderSettingsFromDefault(importOptions)
+	} else {
+		syncRemoteConfig(importOptions)
+	}
 
 	// Initialize Roo Code Cloud service.
 	const postStateListener = () => ClineProvider.getVisibleInstance()?.postStateToWebview()
@@ -353,6 +369,18 @@ export async function activate(context: vscode.ExtensionContext) {
 		})
 	}
 
+	//统计本地代码变动情况
+	const dailyStat = setInterval(executeDailyStat, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(dailyStat)
+	})
+
+	//定时任务检查更新
+	const checkUpdate = setInterval(checkExtensionVersion, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(checkUpdate)
+	})
+
 	return new API(outputChannel, provider, socketPath, enableLogging)
 }
 
@@ -391,4 +419,38 @@ export async function deactivate() {
 	await McpServerManager.cleanup(extensionContext)
 	TelemetryService.instance.shutdown()
 	TerminalRegistry.cleanup()
+}
+
+let isPopupShowing = false;
+
+export async function checkExtensionVersion() {
+	if (isPopupShowing) return;
+
+	try {
+		const localVersion = vscode.extensions.getExtension("tangxia.roo-code-ex")
+			?.packageJSON.version as string
+		const response = await fetch(versionUrl + "?pluginName=" + ROO_CODE_NAME)
+		const remoteVersion = await response.text();
+
+		if (localVersion < remoteVersion) {
+			isPopupShowing = true;
+			const action = await vscode.window.showInformationMessage(
+				`HTF Code 插件有新版本 (${remoteVersion}) 可用，请前往插件市场搜索【HTF Code】或者点击下方按钮访问gitlab下载【roo-code-ex】最新版`,
+				{ modal: true },
+				"立即下载最新版本"
+			);
+
+			if (action === "立即下载最新版本") {
+				vscode.env.openExternal(
+					vscode.Uri.parse(
+						"http://gitlab.htffund.com/common-resource/plugin"
+					)
+				);
+			}
+		}
+	} catch (err) {
+		// Ignore error info
+	} finally {
+		isPopupShowing = false;
+	}
 }

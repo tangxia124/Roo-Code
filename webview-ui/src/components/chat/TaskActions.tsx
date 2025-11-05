@@ -10,6 +10,7 @@ import { DeleteTaskDialog } from "../history/DeleteTaskDialog"
 import { IconButton } from "./IconButton"
 import { ShareButton } from "./ShareButton"
 import { CloudTaskButton } from "./CloudTaskButton"
+import { FeedbackDialog } from "./FeedbackDialog"
 
 interface TaskActionsProps {
 	item?: HistoryItem
@@ -18,6 +19,7 @@ interface TaskActionsProps {
 
 export const TaskActions = ({ item, buttonsDisabled }: TaskActionsProps) => {
 	const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null)
+	const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
 	const { t } = useTranslation()
 	const { copyWithFeedback, showCopyFeedback } = useCopyToClipboard()
 
@@ -63,7 +65,20 @@ export const TaskActions = ({ item, buttonsDisabled }: TaskActionsProps) => {
 				</>
 			)}
 			<ShareButton item={item} disabled={false} showLabel={false} />
+			<IconButton
+				iconClass="codicon-feedback"
+				title={t("chat:taskFeedback.title")}
+				disabled={buttonsDisabled}
+				onClick={() => setShowFeedbackDialog(true)}
+			/>
 			<CloudTaskButton item={item} disabled={buttonsDisabled} />
+			{showFeedbackDialog && (
+				<FeedbackDialog
+					taskId={item?.id || ""}
+					onOpenChange={(open) => !open && setShowFeedbackDialog(false)}
+					open
+				/>
+			)}
 		</div>
 	)
 }
