@@ -994,11 +994,12 @@ export const webviewMessageHandler = async (
 			break
 		}
 		case "requestOpenAiModels":
-			if (message?.values?.baseUrl && message?.values?.apiKey) {
+			if (message?.values?.baseUrl && message?.values?.apiKey && message?.values?.currentApiConfigName) {
 				const openAiModels = await getOpenAiModels(
 					message?.values?.baseUrl,
 					message?.values?.apiKey,
 					message?.values?.openAiHeaders,
+					message?.values?.currentApiConfigName,
 				)
 
 				provider.postMessageToWebview({ type: "openAiModels", openAiModels })
@@ -1997,6 +1998,14 @@ export const webviewMessageHandler = async (
 
 					vscode.window.showErrorMessage(t("common:errors.delete_api_config"))
 				}
+				const openAiModels = await getOpenAiModels(
+					message?.values?.baseUrl,
+					message?.values?.apiKey,
+					message?.values?.openAiHeaders,
+					newName,
+				)
+
+				provider.postMessageToWebview({ type: "openAiModels", openAiModels })
 			}
 			break
 		case "deleteMessageConfirm":

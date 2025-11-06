@@ -126,6 +126,7 @@ export interface ApiOptionsProps {
 	fromWelcomeView?: boolean
 	errorMessage: string | undefined
 	setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
+	currentApiConfigName: string | undefined
 }
 
 const ApiOptions = ({
@@ -135,6 +136,7 @@ const ApiOptions = ({
 	fromWelcomeView,
 	errorMessage,
 	setErrorMessage,
+	currentApiConfigName
 }: ApiOptionsProps) => {
 	const { t } = useAppTranslation()
 	const { organizationAllowList, cloudIsAuthenticated } = useExtensionState()
@@ -224,6 +226,7 @@ const ApiOptions = ({
 						apiKey: apiConfiguration?.openAiApiKey,
 						customHeaders: {}, // Reserved for any additional headers.
 						openAiHeaders: headerObject,
+						currentApiConfigName: currentApiConfigName
 					},
 				})
 			} else if (selectedProvider === "ollama") {

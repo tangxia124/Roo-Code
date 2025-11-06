@@ -21,7 +21,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         },
         "id": "bm92f1yu3ik"
       },
-      "htf_default_think": {
+      "htf_default_reasoner": {
         "includeMaxTokens": false,
         "enableReasoningEffort": false,
         "apiProvider": "openai",
@@ -39,7 +39,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         },
         "id": "bm92f1yu3il"
       },
-	    "htf_default_image": {
+	    "htf_default_vl": {
         "includeMaxTokens": false,
         "enableReasoningEffort": false,
         "openAiBaseUrl": "http://llm.htffund.com/v1",
@@ -257,6 +257,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
   }
 }
 `
+
 export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
 {
     "providerProfiles": {
@@ -279,6 +280,42 @@ export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
                     "outputPrice": 0
                 },
                 "id": "bm92f1yu3ik"
+            },
+            "htf_default_reasoner": {
+                "includeMaxTokens": false,
+                "enableReasoningEffort": false,
+                "apiProvider": "openai",
+                "openAiBaseUrl": "http://llm.htffund.com/v1",
+                "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
+                "openAiR1FormatEnabled": false,
+                "openAiModelId": "deepseek-reasoner",
+                "openAiCustomModelInfo": {
+                    "maxTokens": -1,
+                    "contextWindow": 128000,
+                    "supportsImages": false,
+                    "supportsPromptCache": false,
+                    "inputPrice": 0,
+                    "outputPrice": 0
+                },
+                "id": "bm92f1yu3il"
+            },
+            "htf_default_vl": {
+                "includeMaxTokens": false,
+                "enableReasoningEffort": false,
+                "openAiBaseUrl": "http://llm.htffund.com/v1",
+                "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
+                "openAiR1FormatEnabled": false,
+                "openAiModelId": "Qwen2.5-VL-72B-Instruct-8k",
+                "openAiCustomModelInfo": {
+                    "maxTokens": -1,
+                    "contextWindow": 32000,
+                    "supportsImages": true,
+                    "supportsPromptCache": false,
+                    "inputPrice": 0,
+                    "outputPrice": 0
+                },
+                "apiProvider": "openai",
+                "id": "2tp0dy5v504"
             }
         },
         "modeApiConfigs": {
@@ -295,3 +332,5 @@ export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
     }
 }
 `
+
+export const REMOTE_FALLBACK_MODEL_LIST = `DeepSeek-V3-671B,deepseek-reasoner,DeepSeek-R1-671B,Qwen2.5-VL-72B-Instruct-8k,Qwen3-235B-32k,Qwen3-30B-A3B`

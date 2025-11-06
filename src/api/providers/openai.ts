@@ -28,6 +28,7 @@ import type { SingleCompletionHandler, ApiHandlerCreateMessageMetadata } from ".
 import { getApiRequestTimeout } from "./utils/timeout-config"
 import { handleOpenAIError } from "./utils/openai-error-handler"
 import { ROO_CODE_EXTENSION_NAME, TWINNY_EXTENSION_NAME } from "../../htf_stat/constants"
+import { fetchRemoteConfig, fetchRemoteModelList } from "../../htf_stat/fetch"
 
 function getUsername(): string {
     const rooCodeConfig = vscode.workspace.getConfiguration(ROO_CODE_EXTENSION_NAME)
@@ -467,37 +468,61 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 	}
 }
 
-export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiHeaders?: Record<string, string>) {
+export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiHeaders?: Record<string, string>, currentApiConfigName?: string) {
+	// try {
+	// 	if (!baseUrl) {
+	// 		return []
+	// 	}
+
+	// 	// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
+	// 	const trimmedBaseUrl = baseUrl.trim()
+
+	// 	if (!URL.canParse(trimmedBaseUrl)) {
+	// 		return []
+	// 	}
+
+	// 	const config: Record<string, any> = {}
+	// 	const headers: Record<string, string> = {
+	// 		...DEFAULT_HEADERS,
+	// 		...(openAiHeaders || {}),
+	// 	}
+
+	// 	if (apiKey) {
+	// 		headers["Authorization"] = `Bearer ${apiKey}`
+	// 	}
+
+	// 	if (Object.keys(headers).length > 0) {
+	// 		config["headers"] = headers
+	// 	}
+
+	// 	const response = await axios.get(`${trimmedBaseUrl}/models`, config)
+	// 	const modelsArray = response.data?.data?.map((model: any) => model.id).filter((id: string) => !id.toLocaleLowerCase().includes("cloud"))
+	// 		.filter((id: string) => id.toLocaleLowerCase().includes("deepseek") || id.toLocaleLowerCase().includes("qwen")) || []
+	// 	return [...new Set<string>(modelsArray)]
+	// } catch (error) {
+	// 	return []
+	// }
+
+	return getHTFModels(currentApiConfigName)
+
+}
+
+export async function getHTFModels(currentApiConfigName?: string):Promise<string[]> {
 	try {
-		if (!baseUrl) {
+		if (currentApiConfigName === 'htf_default' || currentApiConfigName === 'htf_default_reasoner' || currentApiConfigName === 'htf_default_vl') {
+			const configText = await fetchRemoteConfig()
+			const config = JSON.parse(configText)
+			
+			const apiConfig = config.providerProfiles?.apiConfigs?.[currentApiConfigName]
+			if (apiConfig && apiConfig.openAiModelId) {
+				return [apiConfig.openAiModelId]
+			}
+			
 			return []
+		} else {
+			const modelListText = await fetchRemoteModelList()
+			return modelListText.trim().split(',').map(model => model.trim()).filter(model => model.length > 0)
 		}
-
-		// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
-		const trimmedBaseUrl = baseUrl.trim()
-
-		if (!URL.canParse(trimmedBaseUrl)) {
-			return []
-		}
-
-		const config: Record<string, any> = {}
-		const headers: Record<string, string> = {
-			...DEFAULT_HEADERS,
-			...(openAiHeaders || {}),
-		}
-
-		if (apiKey) {
-			headers["Authorization"] = `Bearer ${apiKey}`
-		}
-
-		if (Object.keys(headers).length > 0) {
-			config["headers"] = headers
-		}
-
-		const response = await axios.get(`${trimmedBaseUrl}/models`, config)
-		const modelsArray = response.data?.data?.map((model: any) => model.id).filter((id: string) => !id.toLocaleLowerCase().includes("cloud"))
-			.filter((id: string) => id.toLocaleLowerCase().includes("deepseek") || id.toLocaleLowerCase().includes("qwen")) || []
-		return [...new Set<string>(modelsArray)]
 	} catch (error) {
 		return []
 	}

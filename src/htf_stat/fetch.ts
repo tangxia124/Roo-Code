@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as os from "os"
-import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME, htfDefaultConfigUrl } from "./constants"
-import { REMOTE_FALLBACK_PROVIDER_SETTINGS } from "../core/config/defaultProviderSettings"
+import { askUrl, applyUrl, TWINNY_EXTENSION_NAME, ROO_CODE_NAME, ROO_CODE_EXTENSION_NAME, htfDefaultConfigUrl, htfDefaultModelListUrl } from "./constants"
+import { REMOTE_FALLBACK_PROVIDER_SETTINGS, REMOTE_FALLBACK_MODEL_LIST } from "../core/config/defaultProviderSettings"
 
 export interface AskAndResponseStatistics {
     uuid: string
@@ -114,7 +114,7 @@ export async function fetchRemoteConfig(): Promise<string> {
 
         const configText = await response.text()
 
-        if (!configText || configText.trim() === '') {
+        if (!configText || configText.trim() === '' || configText.includes("returnCode")) {
             throw new Error('Empty response from remote config')
         }
 
@@ -123,6 +123,32 @@ export async function fetchRemoteConfig(): Promise<string> {
         return configText
     } catch (err) {
         return REMOTE_FALLBACK_PROVIDER_SETTINGS
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+export async function fetchRemoteModelList(): Promise<string> {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 500)
+    try {
+        const response = await fetch(htfDefaultModelListUrl, {
+            signal: controller.signal
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const modelListText = await response.text()
+
+        if (!modelListText || modelListText.trim() === '' || modelListText.includes("returnCode")) {
+            throw new Error('Empty response from remote model list')
+        }
+
+        return modelListText
+    } catch (err) {
+        return REMOTE_FALLBACK_MODEL_LIST
     } finally {
         clearTimeout(timeoutId);
     }
