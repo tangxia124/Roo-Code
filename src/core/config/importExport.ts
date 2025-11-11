@@ -214,7 +214,7 @@ export const initProviderSettingsFromDefault = async ({
 }
 
 export async function syncRemoteConfig(
-	{ providerSettingsManager, contextProxy, customModesManager }: ImportOptions,
+	{ providerSettingsManager, contextProxy, customModesManager }: ImportOptions, useRemoteCurrentApiConfigName: boolean
 ) {
 	const schema = z.object({
 		providerProfiles: providerProfilesSchema,
@@ -230,7 +230,8 @@ export async function syncRemoteConfig(
 		const previousProviderProfiles = await providerSettingsManager.export()
 
 		const providerProfiles = {
-			currentApiConfigName: remoteProviderProfiles.currentApiConfigName,
+			currentApiConfigName: useRemoteCurrentApiConfigName ? 
+				remoteProviderProfiles.currentApiConfigName : previousProviderProfiles.currentApiConfigName,
 			apiConfigs: {
 				...previousProviderProfiles.apiConfigs,
 				...remoteProviderProfiles.apiConfigs,

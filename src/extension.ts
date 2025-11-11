@@ -139,7 +139,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	if (!currentApiConfigName) {
 		initProviderSettingsFromDefault(importOptions)
 	} else {
-		syncRemoteConfig(importOptions)
+		syncRemoteConfig(importOptions, true)
 	}
 
 	// Initialize Roo Code Cloud service.
@@ -379,6 +379,24 @@ export async function activate(context: vscode.ExtensionContext) {
 	const checkUpdate = setInterval(checkExtensionVersion, 1000 * 60 * 10)
 	context.subscriptions.push({
 		dispose: () => clearInterval(checkUpdate)
+	})
+
+	//定时任务同步远端配置
+	const syncRemoteConfigInterval = setInterval(() => {
+		const currentApiConfigName = contextProxy.getValue("currentApiConfigName")
+		const importOptions = {
+			providerSettingsManager: provider.providerSettingsManager,
+			contextProxy: provider.contextProxy,
+			customModesManager: provider.customModesManager,
+		}
+		if (!currentApiConfigName) {
+			initProviderSettingsFromDefault(importOptions)
+		} else {
+			syncRemoteConfig(importOptions, false)
+		}
+	}, 1000 * 60 * 10)
+	context.subscriptions.push({
+		dispose: () => clearInterval(syncRemoteConfigInterval)
 	})
 
 	return new API(outputChannel, provider, socketPath, enableLogging)
