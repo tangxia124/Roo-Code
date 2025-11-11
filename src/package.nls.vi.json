@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "Một đội ngũ phát triển các tác nhân AI hoàn chỉnh trong trình soạn thảo của bạn.",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"command.newTask.title": "Tác Vụ Mới",
 	"command.explainCode.title": "Giải Thích Mã",
 	"command.fixCode.title": "Sửa Mã",
@@ -26,6 +26,8 @@
 	"command.openInEditor.title": "Mở trong Trình Soạn Thảo",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Cài Đặt",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Tài Liệu",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Các lệnh có thể được thực thi tự động khi 'Luôn phê duyệt các thao tác thực thi' được bật",

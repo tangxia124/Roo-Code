@@ -1,6 +1,8 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import OpenAI, { AzureOpenAI } from "openai"
 import axios from "axios"
+import * as vscode from 'vscode'
+import * as os from "os"
 
 import {
 	type ModelInfo,
@@ -25,6 +27,14 @@ import { BaseProvider } from "./base-provider"
 import type { SingleCompletionHandler, ApiHandlerCreateMessageMetadata } from "../index"
 import { getApiRequestTimeout } from "./utils/timeout-config"
 import { handleOpenAIError } from "./utils/openai-error-handler"
+import { ROO_CODE_EXTENSION_NAME, TWINNY_EXTENSION_NAME } from "../../htf_stat/constants"
+import { fetchRemoteConfig, fetchRemoteModelList } from "../../htf_stat/fetch"
+
+function getUsername(): string {
+    const rooCodeConfig = vscode.workspace.getConfiguration(ROO_CODE_EXTENSION_NAME)
+    const twinnyConfig = vscode.workspace.getConfiguration(TWINNY_EXTENSION_NAME)
+    return rooCodeConfig.get('username') || twinnyConfig.get('username') || os.userInfo().username || "unknown user"
+}
 
 // TODO: Rename this to OpenAICompatibleHandler. Also, I think the
 // `OpenAINativeHandler` can subclass from this, since it's obviously
@@ -164,6 +174,9 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 				stream: true as const,
 				...(isGrokXAI ? {} : { stream_options: { include_usage: true } }),
 				...(reasoning && reasoning),
+				metadata: {
+					"x-htf-llm-workflow-info": `roocode-${getUsername()}`
+				}
 			}
 
 			// Add max_tokens if needed
@@ -225,6 +238,9 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 					: enabledLegacyFormat
 						? [systemMessage, ...convertToSimpleMessages(messages)]
 						: [systemMessage, ...convertToOpenAiMessages(messages)],
+				metadata: {
+					"x-htf-llm-workflow-info": `roocode-${getUsername()}`
+				}
 			}
 
 			// Add max_tokens if needed
@@ -275,6 +291,9 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 			const requestOptions: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming = {
 				model: model.id,
 				messages: [{ role: "user", content: prompt }],
+				metadata: {
+					"x-htf-llm-workflow-info": `roocode-${getUsername()}`
+				}
 			}
 
 			// Add max_tokens if needed
@@ -324,6 +343,9 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 				...(isGrokXAI ? {} : { stream_options: { include_usage: true } }),
 				reasoning_effort: modelInfo.reasoningEffort as "low" | "medium" | "high" | undefined,
 				temperature: undefined,
+				metadata: {
+					"x-htf-llm-workflow-info": `roocode-${getUsername()}`
+				}
 			}
 
 			// O3 family models do not support the deprecated max_tokens parameter
@@ -354,6 +376,9 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 				],
 				reasoning_effort: modelInfo.reasoningEffort as "low" | "medium" | "high" | undefined,
 				temperature: undefined,
+				metadata: {
+					"x-htf-llm-workflow-info": `roocode-${getUsername()}`
+				}
 			}
 
 			// O3 family models do not support the deprecated max_tokens parameter
@@ -437,36 +462,61 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 	}
 }
 
-export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiHeaders?: Record<string, string>) {
+export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiHeaders?: Record<string, string>, currentApiConfigName?: string) {
+	// try {
+	// 	if (!baseUrl) {
+	// 		return []
+	// 	}
+
+	// 	// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
+	// 	const trimmedBaseUrl = baseUrl.trim()
+
+	// 	if (!URL.canParse(trimmedBaseUrl)) {
+	// 		return []
+	// 	}
+
+	// 	const config: Record<string, any> = {}
+	// 	const headers: Record<string, string> = {
+	// 		...DEFAULT_HEADERS,
+	// 		...(openAiHeaders || {}),
+	// 	}
+
+	// 	if (apiKey) {
+	// 		headers["Authorization"] = `Bearer ${apiKey}`
+	// 	}
+
+	// 	if (Object.keys(headers).length > 0) {
+	// 		config["headers"] = headers
+	// 	}
+
+	// 	const response = await axios.get(`${trimmedBaseUrl}/models`, config)
+	// 	const modelsArray = response.data?.data?.map((model: any) => model.id).filter((id: string) => !id.toLocaleLowerCase().includes("cloud"))
+	// 		.filter((id: string) => id.toLocaleLowerCase().includes("deepseek") || id.toLocaleLowerCase().includes("qwen")) || []
+	// 	return [...new Set<string>(modelsArray)]
+	// } catch (error) {
+	// 	return []
+	// }
+
+	return getHTFModels(currentApiConfigName)
+
+}
+
+export async function getHTFModels(currentApiConfigName?: string):Promise<string[]> {
 	try {
-		if (!baseUrl) {
+		if (currentApiConfigName === 'htf_default' || currentApiConfigName === 'htf_default_reasoner' || currentApiConfigName === 'htf_default_vl') {
+			const configText = await fetchRemoteConfig()
+			const config = JSON.parse(configText)
+			
+			const apiConfig = config.providerProfiles?.apiConfigs?.[currentApiConfigName]
+			if (apiConfig && apiConfig.openAiModelId) {
+				return [apiConfig.openAiModelId]
+			}
+			
 			return []
+		} else {
+			const modelListText = await fetchRemoteModelList()
+			return modelListText.trim().split(',').map(model => model.trim()).filter(model => model.length > 0)
 		}
-
-		// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
-		const trimmedBaseUrl = baseUrl.trim()
-
-		if (!URL.canParse(trimmedBaseUrl)) {
-			return []
-		}
-
-		const config: Record<string, any> = {}
-		const headers: Record<string, string> = {
-			...DEFAULT_HEADERS,
-			...(openAiHeaders || {}),
-		}
-
-		if (apiKey) {
-			headers["Authorization"] = `Bearer ${apiKey}`
-		}
-
-		if (Object.keys(headers).length > 0) {
-			config["headers"] = headers
-		}
-
-		const response = await axios.get(`${trimmedBaseUrl}/models`, config)
-		const modelsArray = response.data?.data?.map((model: any) => model.id) || []
-		return [...new Set<string>(modelsArray)]
 	} catch (error) {
 		return []
 	}
