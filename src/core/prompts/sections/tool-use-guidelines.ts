@@ -64,5 +64,23 @@ It is crucial to proceed step-by-step, waiting for the user's message after each
 3. Adapt your approach based on new information or unexpected results.
 4. Ensure that each action builds correctly on the previous ones.
 
-By waiting for and carefully considering the user's response after each tool use, you can react accordingly and make informed decisions about how to proceed with the task. This iterative process helps ensure the overall success and accuracy of your work.`
+By waiting for and carefully considering the user's response after each tool use, you can react accordingly and make informed decisions about how to proceed with the task. This iterative process helps ensure the overall success and accuracy of your work.
+
+**再次强调工具调用格式**
+请严格按照 **Tool Use Formatting** 的要求，参考示例输出工具调用信息。它是ReAct模式，**不是openai tool_call** 格式。
+think step by step, 检查输出工具的格式和内容。
+
+**错误示例如下**:
+<|tool_calls_section_begin|> <|tool_call_begin|> functions.read_file:0 <|tool_call_argument_begin|> {"args": {"file": {"path": "src/core/prompts/responses.ts"}}} <|tool_call_end|> <|tool_calls_section_end|>
+
+**禁止使用**：
+- <|tool_calls_section_begin|>
+- <|tool_call_begin|>
+- <|tool_call_argument_begin|>
+- <|tool_call_argument_end|>
+- <|tool_call_end|>
+- <|tool_calls_section_end|>
+
+# 禁止使用错误示例的格式，严格按照 **Tool Use Formatting** 的要求，使用XML-style tags。如果遇到失败的情况，请反复检查工具调用的格式是否正确。
+`
 }

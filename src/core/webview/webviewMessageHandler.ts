@@ -21,6 +21,7 @@ import { TelemetryService } from "@roo-code/telemetry"
 
 import { type ApiMessage } from "../task-persistence/apiMessages"
 import { saveTaskMessages } from "../task-persistence"
+import { submitTaskFeedback } from "../../htf_stat/feedback"
 
 import { ClineProvider } from "./ClineProvider"
 import { handleCheckpointRestoreOperation } from "./checkpointRestoreHandler"
@@ -667,6 +668,30 @@ export const webviewMessageHandler = async (
 				provider.exportTaskWithId(currentTaskId)
 			}
 			break
+		case "submitTaskFeedback":
+			try {
+				const currentTaskId = provider.getCurrentTask()?.taskId
+				if (currentTaskId) {
+					const taskMarkdown = await provider.getTaskMarkdown(currentTaskId)
+
+					const feedbackData = {
+						userFeedback: message.text,
+						taskMarkdown: taskMarkdown,
+					}
+
+					const result = await submitTaskFeedback(feedbackData)
+					if (result.success) {
+						vscode.window.showInformationMessage("您反馈的HTFCode任务问题已经提交成功！")
+					} else {
+						vscode.window.showErrorMessage("您反馈的HTFCode任务问题提交失败")
+					}
+				} else {
+					vscode.window.showErrorMessage("无法提交反馈：没有活动的任务")
+				}
+			} catch (error) {
+				vscode.window.showErrorMessage("您反馈的HTFCode任务问题提交失败")
+			}
+			break
 		case "shareCurrentTask":
 			const shareTaskId = provider.getCurrentTask()?.taskId
 			const clineMessages = provider.getCurrentTask()?.clineMessages
@@ -1007,11 +1032,12 @@ export const webviewMessageHandler = async (
 			break
 		}
 		case "requestOpenAiModels":
-			if (message?.values?.baseUrl && message?.values?.apiKey) {
+			if (message?.values?.baseUrl && message?.values?.apiKey && message?.values?.currentApiConfigName) {
 				const openAiModels = await getOpenAiModels(
 					message?.values?.baseUrl,
 					message?.values?.apiKey,
 					message?.values?.openAiHeaders,
+					message?.values?.currentApiConfigName,
 				)
 
 				provider.postMessageToWebview({ type: "openAiModels", openAiModels })
@@ -1710,6 +1736,14 @@ export const webviewMessageHandler = async (
 
 					vscode.window.showErrorMessage(t("common:errors.delete_api_config"))
 				}
+				const openAiModels = await getOpenAiModels(
+					message?.values?.baseUrl,
+					message?.values?.apiKey,
+					message?.values?.openAiHeaders,
+					newName,
+				)
+
+				provider.postMessageToWebview({ type: "openAiModels", openAiModels })
 			}
 			break
 		case "deleteMessageConfirm":

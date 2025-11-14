@@ -183,6 +183,7 @@ const WelcomeView = () => {
 						setApiConfigurationField={setApiConfigurationFieldForApiOptions}
 						errorMessage={errorMessage}
 						setErrorMessage={setErrorMessage}
+						currentApiConfigName={currentApiConfigName}
 					/>
 				</div>
 			</TabContent>

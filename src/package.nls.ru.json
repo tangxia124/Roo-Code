@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "Целая команда ИИ-разработчиков в вашем редакторе.",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"views.contextMenu.label": "Roo Code",
 	"views.terminalMenu.label": "Roo Code",
 	"views.activitybar.title": "Roo Code",
@@ -13,6 +13,8 @@
 	"command.openInEditor.title": "Открыть в редакторе",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Настройки",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Документация",
 	"command.openInNewTab.title": "Открыть в новой вкладке",
 	"command.explainCode.title": "Объяснить код",
