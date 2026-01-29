@@ -377,6 +377,7 @@ const WelcomeViewProvider = () => {
 								setApiConfigurationField={setApiConfigurationFieldForApiOptions}
 								errorMessage={errorMessage}
 								setErrorMessage={setErrorMessage}
+								currentApiConfigName={currentApiConfigName}
 							/>
 						</div>
 					</div>

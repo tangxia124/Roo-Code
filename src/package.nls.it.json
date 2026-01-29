@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "Un intero team di sviluppo di agenti IA nel tuo editor.",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"command.newTask.title": "Nuovo Task",
 	"command.explainCode.title": "Spiega Codice",
 	"command.fixCode.title": "Correggi Codice",
@@ -24,6 +24,8 @@
 	"command.openInEditor.title": "Apri nell'Editor",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "Impostazioni",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "Documentazione",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Comandi che possono essere eseguiti automaticamente quando 'Approva sempre le operazioni di esecuzione' è attivato",

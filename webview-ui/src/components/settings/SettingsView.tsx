@@ -744,14 +744,22 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 						{renderTab === "providers" && (
 							<div>
 								<SectionHeader>{t("settings:sections.providers")}</SectionHeader>
-
 								<Section>
 									<ApiConfigManager
 										currentApiConfigName={currentApiConfigName}
 										listApiConfigMeta={listApiConfigMeta}
 										onSelectConfig={(configName: string) =>
-											checkUnsaveChanges(() =>
-												vscode.postMessage({ type: "loadApiConfiguration", text: configName }),
+											checkUnsaveChanges(() => {
+												vscode.postMessage({ type: "loadApiConfiguration", text: configName })
+												vscode.postMessage({
+													type: "requestOpenAiModels",
+													values: {
+														baseUrl: apiConfiguration?.openAiBaseUrl,
+														apiKey: apiConfiguration?.openAiApiKey,
+														currentApiConfigName: configName
+													},
+												})
+											}
 											)
 										}
 										onDeleteConfig={(configName: string) =>
@@ -764,13 +772,30 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 												apiConfiguration,
 											})
 											prevApiConfigName.current = newName
+											vscode.postMessage({
+												type: "requestOpenAiModels",
+												values: {
+													baseUrl: apiConfiguration?.openAiBaseUrl,
+													apiKey: apiConfiguration?.openAiApiKey,
+													currentApiConfigName: newName
+												},
+											})
 										}}
-										onUpsertConfig={(configName: string) =>
+										onUpsertConfig={(configName: string) => {
 											vscode.postMessage({
 												type: "upsertApiConfiguration",
 												text: configName,
 												apiConfiguration,
 											})
+											vscode.postMessage({
+												type: "requestOpenAiModels",
+												values: {
+													baseUrl: apiConfiguration?.openAiBaseUrl,
+													apiKey: apiConfiguration?.openAiApiKey,
+													currentApiConfigName: configName
+												},
+											})
+										}
 										}
 									/>
 									<ApiOptions
@@ -779,11 +804,11 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 										setApiConfigurationField={setApiConfigurationField}
 										errorMessage={errorMessage}
 										setErrorMessage={setErrorMessage}
+										currentApiConfigName={currentApiConfigName}
 									/>
 								</Section>
 							</div>
 						)}
-
 						{/* Auto-Approve Section */}
 						{renderTab === "autoApprove" && (
 							<AutoApproveSettings

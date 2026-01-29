@@ -110,6 +110,7 @@ describe("ApiOptions Provider Filtering", () => {
 		fromWelcomeView: false,
 		errorMessage: undefined,
 		setErrorMessage: vi.fn(),
+		currentApiConfigName: undefined
 	}
 
 	const renderWithProviders = (props = defaultProps) => {

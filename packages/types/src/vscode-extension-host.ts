@@ -455,6 +455,7 @@ export interface WebviewMessage {
 		| "selectImages"
 		| "exportCurrentTask"
 		| "shareCurrentTask"
+		| "submitTaskFeedback"
 		| "showTaskWithId"
 		| "deleteTaskWithId"
 		| "exportTaskWithId"

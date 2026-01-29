@@ -258,6 +258,7 @@ const renderApiOptions = (props: Partial<ApiOptionsProps> = {}) => {
 		<ExtensionStateContextProvider>
 			<QueryClientProvider client={queryClient}>
 				<ApiOptions
+				    currentApiConfigName={undefined}
 					errorMessage={undefined}
 					setErrorMessage={() => {}}
 					uriScheme={undefined}

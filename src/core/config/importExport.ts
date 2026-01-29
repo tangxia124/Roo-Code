@@ -19,6 +19,8 @@ import { ContextProxy } from "./ContextProxy"
 import { CustomModesManager } from "./CustomModesManager"
 import { resolveDefaultSaveUri, saveLastExportPath } from "../../utils/export"
 import { t } from "../../i18n"
+import { DEFAULT_PROVIDER_SETTINGS } from "./defaultProviderSettings"
+import { fetchRemoteConfig } from "../../htf_stat/fetch"
 
 export type ImportOptions = {
 	providerSettingsManager: ProviderSettingsManager
@@ -241,6 +243,143 @@ export const importSettingsFromFile = async (
 		contextProxy,
 		customModesManager,
 	})
+}
+
+export const initProviderSettingsFromDefault = async ({
+	providerSettingsManager,
+	contextProxy,
+	customModesManager,
+}: ImportOptions) => {
+	const schema = z.object({
+		providerProfiles: providerProfilesSchema,
+		globalSettings: globalSettingsSchema.optional(),
+	})
+
+	try {
+		const remoteConfig = await fetchRemoteConfig()
+
+		const { providerProfiles: remoteProviderProfiles } = schema.parse(
+			JSON.parse(remoteConfig)
+		)
+
+		const { providerProfiles: newProviderProfiles, globalSettings = {} } = schema.parse(
+			JSON.parse(DEFAULT_PROVIDER_SETTINGS),
+		)
+
+		const providerProfiles = {
+			currentApiConfigName: remoteProviderProfiles.currentApiConfigName,
+			apiConfigs: {
+				...newProviderProfiles.apiConfigs,
+				...remoteProviderProfiles.apiConfigs
+			},
+			modeApiConfigs: {
+				...newProviderProfiles.modeApiConfigs,
+				...remoteProviderProfiles.modeApiConfigs
+			},
+		}
+
+		await Promise.all(
+			(globalSettings.customModes ?? []).map((mode) => customModesManager.updateCustomMode(mode.slug, mode)),
+		)
+
+		await providerSettingsManager.import(providerProfiles)
+		await contextProxy.setValues(globalSettings)
+
+		// Set the current provider.
+		const currentProviderName = providerProfiles.currentApiConfigName
+		const currentProvider = providerProfiles.apiConfigs[currentProviderName]
+		contextProxy.setValue("currentApiConfigName", currentProviderName)
+
+		// TODO: It seems like we don't need to have the provider settings in
+		// the proxy; we can just use providerSettingsManager as the source of
+		// truth.
+		if (currentProvider) {
+			contextProxy.setProviderSettings(currentProvider)
+		}
+
+		contextProxy.setValue("listApiConfigMeta", await providerSettingsManager.listConfig())
+
+		return { providerProfiles, globalSettings, success: true }
+	} catch (e) {
+		let error = "Unknown error"
+
+		if (e instanceof ZodError) {
+			error = e.issues.map((issue) => `[${issue.path.join(".")}]: ${issue.message}`).join("\n")
+			TelemetryService.instance.captureSchemaValidationError({ schemaName: "ImportExport", error: e })
+		} else if (e instanceof Error) {
+			error = e.message
+		}
+
+		return { success: false, error }
+	}
+}
+
+export async function syncRemoteConfig(
+	{ providerSettingsManager, contextProxy, customModesManager }: ImportOptions, useRemoteCurrentApiConfigName: boolean
+) {
+	const schema = z.object({
+		providerProfiles: providerProfilesSchema,
+		globalSettings: globalSettingsSchema.optional(),
+	})
+
+	try {
+		const remoteConfig = await fetchRemoteConfig()
+		const { providerProfiles: remoteProviderProfiles, globalSettings = {} } = schema.parse(
+			JSON.parse(remoteConfig)
+		)
+
+		const previousProviderProfiles = await providerSettingsManager.export()
+
+		const providerProfiles = {
+			currentApiConfigName: useRemoteCurrentApiConfigName ? 
+				remoteProviderProfiles.currentApiConfigName : previousProviderProfiles.currentApiConfigName,
+			apiConfigs: {
+				...previousProviderProfiles.apiConfigs,
+				...remoteProviderProfiles.apiConfigs,
+			},
+			modeApiConfigs: {
+				...previousProviderProfiles.modeApiConfigs,
+				...remoteProviderProfiles.modeApiConfigs,
+			},
+		}
+
+		await Promise.all(
+			(globalSettings.customModes ?? []).map((mode) => customModesManager.updateCustomMode(mode.slug, mode)),
+		)
+
+		// OpenAI Compatible settings are now correctly stored in codebaseIndexConfig
+		// They will be imported automatically with the config - no special handling needed
+
+		await providerSettingsManager.import(providerProfiles)
+		await contextProxy.setValues(globalSettings)
+
+		// Set the current provider.
+		const currentProviderName = providerProfiles.currentApiConfigName
+		const currentProvider = providerProfiles.apiConfigs[currentProviderName]
+		contextProxy.setValue("currentApiConfigName", currentProviderName)
+
+		// TODO: It seems like we don't need to have the provider settings in
+		// the proxy; we can just use providerSettingsManager as the source of
+		// truth.
+		if (currentProvider) {
+			contextProxy.setProviderSettings(currentProvider)
+		}
+
+		contextProxy.setValue("listApiConfigMeta", await providerSettingsManager.listConfig())
+
+		return { providerProfiles, globalSettings, success: true }
+	} catch (e) {
+		let error = "Unknown error"
+
+		if (e instanceof ZodError) {
+			error = e.issues.map((issue) => `[${issue.path.join(".")}]: ${issue.message}`).join("\n")
+			TelemetryService.instance.captureSchemaValidationError({ schemaName: "ImportExport", error: e })
+		} else if (e instanceof Error) {
+			error = e.message
+		}
+
+		return { success: false, error }
+	}
 }
 
 export const exportSettings = async ({ providerSettingsManager, contextProxy }: ExportOptions) => {
