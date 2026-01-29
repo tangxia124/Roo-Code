@@ -10,7 +10,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         "openAiBaseUrl": "http://llm.htffund.com/v1",
         "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
         "openAiR1FormatEnabled": false,
-        "openAiModelId": "DeepSeek-V3-671B",
+        "openAiModelId": "deepseek-chat-code",
         "openAiCustomModelInfo": {
           "maxTokens": -1,
           "contextWindow": 128000,
@@ -28,7 +28,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
         "openAiBaseUrl": "http://llm.htffund.com/v1",
         "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
         "openAiR1FormatEnabled": false,
-        "openAiModelId": "deepseek-reasoner",
+        "openAiModelId": "deepseek-reasoner-code",
         "openAiCustomModelInfo": {
           "maxTokens": -1,
           "contextWindow": 128000,
@@ -74,11 +74,13 @@ export const DEFAULT_PROVIDER_SETTINGS = `
       "diffSettingsMigrated": true,
       "openAiHeadersMigrated": true,
       "consecutiveMistakeLimitMigrated": true,
-      "todoListEnabledMigrated": true
+      "todoListEnabledMigrated": true,
+      "claudeCodeLegacySettingsMigrated": true
     }
   },
   "globalSettings": {
-    "lastShownAnnouncementId": "nov-2025-v3.30.0-pr-fixer",
+    "lastShownAnnouncementId": "jan-2026-v3.45.0-smart-code-folding",
+    "dismissedUpsells": ["longRunningTask", "taskList2"],
     "openRouterImageApiKey": "",
     "openRouterImageGenerationSelectedModel": "",
     "condensingApiConfigId": "bm92f1yu3ik",
@@ -91,7 +93,6 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "alwaysAllowWriteProtected": false,
     "writeDelayMs": 1000,
     "alwaysAllowBrowser": false,
-    "alwaysApproveResubmit": false,
     "requestDelaySeconds": 10,
     "alwaysAllowMcp": false,
     "alwaysAllowModeSwitch": false,
@@ -99,7 +100,6 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "alwaysAllowExecute": false,
     "alwaysAllowFollowupQuestions": false,
     "followupAutoApproveTimeoutMs": 60000,
-    "alwaysAllowUpdateTodoList": false,
     "allowedCommands": [
       "npm test",
       "npm install",
@@ -109,11 +109,14 @@ export const DEFAULT_PROVIDER_SETTINGS = `
       "git show"
     ],
     "deniedCommands": [],
+    "allowedMaxRequests": null,
+    "allowedMaxCost": null,
     "autoCondenseContext": true,
     "autoCondenseContextPercent": 100,
     "maxConcurrentFileReads": 15,
     "includeCurrentTime": true,
     "includeCurrentCost": false,
+    "maxGitStatusFiles": 0,
     "includeDiagnosticMessages": true,
     "maxDiagnosticMessages": 50,
     "browserToolEnabled": false,
@@ -121,21 +124,22 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "screenshotQuality": 75,
     "remoteBrowserEnabled": false,
     "enableCheckpoints": true,
-    "checkpointTimeout": 15,
+    "checkpointTimeout": 20,
     "ttsEnabled": false,
     "ttsSpeed": 1,
     "soundEnabled": false,
     "soundVolume": 0.5,
     "maxOpenTabsContext": 30,
     "maxWorkspaceFiles": 300,
-    "showRooIgnoredFiles": true,
+    "showRooIgnoredFiles": false,
+    "enableSubfolderRules": true,
     "maxReadFileLine": -1,
     "maxImageFileSize": 10,
     "maxTotalImageSize": 50,
     "terminalOutputLineLimit": 1000,
     "terminalOutputCharacterLimit": 100000,
     "terminalShellIntegrationTimeout": 100000,
-    "terminalShellIntegrationDisabled": false,
+    "terminalShellIntegrationDisabled": true,
     "terminalCommandDelay": 0,
     "terminalPowershellCounter": false,
     "terminalZshClearEolMark": true,
@@ -144,11 +148,11 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "terminalZdotdir": false,
     "terminalCompressProgressBar": true,
     "experiments": {
-      "powerSteering": true,
-	    "multiFileApplyDiff": false,
+      "customTools": false,
+	    "multipleNativeToolCalls": false,
       "preventFocusDisruption": false,
       "imageGeneration": false,
-      "runSlashCommand": false
+      "runSlashCommand": true
     },
     "codebaseIndexModels": {
       "openai": {
@@ -252,6 +256,7 @@ export const DEFAULT_PROVIDER_SETTINGS = `
     "enhancementApiConfigId": "bm92f1yu3ik",
     "includeTaskHistoryInEnhance": true,
     "reasoningBlockCollapsed": true,
+    "enterBehavior": "send",
     "profileThresholds": {},
     "hasOpenedModeSelector": true
   }
@@ -270,7 +275,7 @@ export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
                 "openAiBaseUrl": "http://llm.htffund.com/v1",
                 "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
                 "openAiR1FormatEnabled": false,
-                "openAiModelId": "DeepSeek-V3-671B",
+                "openAiModelId": "deepseek-chat-code",
                 "openAiCustomModelInfo": {
                     "maxTokens": -1,
                     "contextWindow": 128000,
@@ -288,7 +293,7 @@ export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
                 "openAiBaseUrl": "http://llm.htffund.com/v1",
                 "openAiApiKey": "sk-iLiWSbLYunZDVpHVyZrmuA",
                 "openAiR1FormatEnabled": false,
-                "openAiModelId": "deepseek-reasoner",
+                "openAiModelId": "deepseek-reasoner-code",
                 "openAiCustomModelInfo": {
                     "maxTokens": -1,
                     "contextWindow": 128000,
@@ -333,4 +338,4 @@ export const REMOTE_FALLBACK_PROVIDER_SETTINGS = `
 }
 `
 
-export const REMOTE_FALLBACK_MODEL_LIST = `DeepSeek-V3-671B,deepseek-reasoner,DeepSeek-R1-671B,Qwen2.5-VL-72B-Instruct-8k,Qwen3-235B-32k,Qwen3-30B-A3B`
+export const REMOTE_FALLBACK_MODEL_LIST = `deepseek-chat-code,deepseek-reasoner-code,DeepSeek-V3-671B,deepseek-reasoner,DeepSeek-R1-671B,Qwen2.5-VL-72B-Instruct-8k,Qwen3-235B-32k,Qwen3-30B-A3B`
