@@ -280,7 +280,7 @@ export class DiffViewProvider {
 			.map(part => part.value)
 			.join(newContentEOL);
 		if (addedContent) {
-			applyStatistics({ applyContext: addedContent, model: "DeepSeek-R1-671B", action: "acceptRooCodeSolution" })
+			applyStatistics({ applyContext: addedContent, model: "deepseek-chat-code", action: "acceptRooCodeSolution" })
 		}
 
 		// Just in case the new content has a mix of varying EOL characters.
