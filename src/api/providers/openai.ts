@@ -560,42 +560,41 @@ export class OpenAiHandler extends BaseProvider implements SingleCompletionHandl
 }
 
 export async function getOpenAiModels(baseUrl?: string, apiKey?: string, openAiHeaders?: Record<string, string>, currentApiConfigName?: string) {
-	// try {
-	// 	if (!baseUrl) {
-	// 		return []
-	// 	}
+	try {
+		if (!baseUrl) {
+			return []
+		}
 
-	// 	// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
-	// 	const trimmedBaseUrl = baseUrl.trim()
+		// Trim whitespace from baseUrl to handle cases where users accidentally include spaces
+		const trimmedBaseUrl = baseUrl.trim()
 
-	// 	if (!URL.canParse(trimmedBaseUrl)) {
-	// 		return []
-	// 	}
+		if (!URL.canParse(trimmedBaseUrl)) {
+			return []
+		}
 
-	// 	const config: Record<string, any> = {}
-	// 	const headers: Record<string, string> = {
-	// 		...DEFAULT_HEADERS,
-	// 		...(openAiHeaders || {}),
-	// 	}
+		const config: Record<string, any> = {}
+		const headers: Record<string, string> = {
+			...DEFAULT_HEADERS,
+			...(openAiHeaders || {}),
+		}
 
-	// 	if (apiKey) {
-	// 		headers["Authorization"] = `Bearer ${apiKey}`
-	// 	}
+		if (apiKey) {
+			headers["Authorization"] = `Bearer ${apiKey}`
+		}
 
-	// 	if (Object.keys(headers).length > 0) {
-	// 		config["headers"] = headers
-	// 	}
+		if (Object.keys(headers).length > 0) {
+			config["headers"] = headers
+		}
 
-	// 	const response = await axios.get(`${trimmedBaseUrl}/models`, config)
-	// 	const modelsArray = response.data?.data?.map((model: any) => model.id).filter((id: string) => !id.toLocaleLowerCase().includes("cloud"))
-	// 		.filter((id: string) => id.toLocaleLowerCase().includes("deepseek") || id.toLocaleLowerCase().includes("qwen")) || []
-	// 	return [...new Set<string>(modelsArray)]
-	// } catch (error) {
-	// 	return []
-	// }
-
-	return getHTFModels(currentApiConfigName)
-
+		if ('http://llm.htffund.com/v1' === trimmedBaseUrl) {
+			return getHTFModels(currentApiConfigName)
+		}
+		const response = await axios.get(`${trimmedBaseUrl}/models`, config)
+		const modelsArray = response.data?.data?.map((model: any) => model.id) || []
+		return [...new Set<string>(modelsArray)]
+	} catch (error) {
+		return []
+	}
 }
 
 export async function getHTFModels(currentApiConfigName?: string):Promise<string[]> {
