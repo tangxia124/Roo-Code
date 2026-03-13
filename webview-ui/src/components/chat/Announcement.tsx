@@ -49,7 +49,7 @@ const Announcement = ({ hideAnnouncement }: AnnouncementProps) => {
 						</ul>
 					</div>
 
-					<div className="mt-4 text-sm text-center text-vscode-descriptionForeground">
+					{/* <div className="mt-4 text-sm text-center text-vscode-descriptionForeground">
 						<div className="flex items-center justify-center gap-4">
 							<SocialLink
 								icon={<SiX className="w-4 h-4" aria-hidden />}
@@ -67,7 +67,7 @@ const Announcement = ({ hideAnnouncement }: AnnouncementProps) => {
 								href="https://www.reddit.com/r/RooCode/"
 							/>
 						</div>
-					</div>
+					</div> */}
 
 					<div className="mt-3 text-sm text-center text-vscode-descriptionForeground">
 						<Trans i18nKey="chat:announcement.support" components={{ githubLink: <GitHubLink /> }} />
