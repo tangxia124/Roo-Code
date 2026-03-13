@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "在你的编辑器中提供完整的 AI 代理开发团队。",
+	"extension.displayName": "HTF Code",
+	"extension.description": "HTF内部使用的AI工具，fork from roo code，在你的编辑器中提供完整的 AI 代理开发团队。",
 	"command.newTask.title": "新建任务",
 	"command.explainCode.title": "解释代码",
 	"command.fixCode.title": "修复代码",
@@ -24,6 +24,8 @@
 	"command.openInEditor.title": "在编辑器中打开",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "设置",
+	"command.customSettings.title": "自定义设置",
+	"settings.rooCodeCloudEnabled.description": "启用 Roo Code Cloud。",
 	"command.documentation.title": "文档",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "当启用'始终批准执行操作'时可以自动执行的命令",

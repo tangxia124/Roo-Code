@@ -11,6 +11,8 @@ import { DeleteTaskDialog } from "../history/DeleteTaskDialog"
 import { ShareButton } from "./ShareButton"
 import { CopyIcon, CheckIcon, DownloadIcon, Trash2Icon, FileJsonIcon, MessageSquareCodeIcon } from "lucide-react"
 import { LucideIconButton } from "./LucideIconButton"
+import { FeedbackDialog } from "./FeedbackDialog"
+import { IconButton } from "./IconButton"
 
 interface TaskActionsProps {
 	item?: HistoryItem
@@ -19,6 +21,7 @@ interface TaskActionsProps {
 
 export const TaskActions = ({ item, buttonsDisabled }: TaskActionsProps) => {
 	const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null)
+	const [showFeedbackDialog, setShowFeedbackDialog] = useState(false)
 	const { t } = useTranslation()
 	const { copyWithFeedback, showCopyFeedback } = useCopyToClipboard()
 	const { debug } = useExtensionState()
@@ -63,6 +66,12 @@ export const TaskActions = ({ item, buttonsDisabled }: TaskActionsProps) => {
 				</>
 			)}
 			<ShareButton item={item} disabled={false} />
+			<IconButton
+				iconClass="codicon-feedback"
+				title={t("chat:taskFeedback.title")}
+				disabled={buttonsDisabled}
+				onClick={() => setShowFeedbackDialog(true)}
+			/>
 			{debug && item?.id && (
 				<>
 					<LucideIconButton
@@ -76,6 +85,13 @@ export const TaskActions = ({ item, buttonsDisabled }: TaskActionsProps) => {
 						onClick={() => vscode.postMessage({ type: "openDebugUiHistory" })}
 					/>
 				</>
+			)}
+			{showFeedbackDialog && (
+				<FeedbackDialog
+					taskId={item?.id || ""}
+					onOpenChange={(open) => !open && setShowFeedbackDialog(false)}
+					open
+				/>
 			)}
 		</div>
 	)

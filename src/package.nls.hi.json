@@ -1,6 +1,6 @@
 {
-	"extension.displayName": "Roo Code",
-	"extension.description": "आपके एडिटर में एआई एजेंट्स की पूरी डेवलपमेंट टीम।",
+	"extension.displayName": "HTF Code",
+	"extension.description": "The AI tools used internally by HTF are forked from Roo code and provide a complete AI agent development team within your editor.",
 	"command.newTask.title": "नया कार्य",
 	"command.explainCode.title": "कोड समझाएं",
 	"command.fixCode.title": "कोड ठीक करें",
@@ -24,6 +24,8 @@
 	"command.openInEditor.title": "एडिटर में खोलें",
 	"command.cloud.title": "Cloud",
 	"command.settings.title": "सेटिंग्स",
+	"command.customSettings.title": "Custom Settings",
+	"settings.rooCodeCloudEnabled.description": "Enable Roo Code Cloud.",
 	"command.documentation.title": "दस्तावेज़ीकरण",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "वे कमांड जो स्वचालित रूप से निष्पादित की जा सकती हैं जब 'हमेशा निष्पादन संचालन को स्वीकृत करें' सक्रिय हो",

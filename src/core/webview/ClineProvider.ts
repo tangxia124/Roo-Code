@@ -63,7 +63,7 @@ import { EMBEDDING_MODEL_PROFILES } from "../../shared/embeddingModels"
 import { ProfileValidator } from "../../shared/ProfileValidator"
 
 import { Terminal } from "../../integrations/terminal/Terminal"
-import { downloadTask, getTaskFileName } from "../../integrations/misc/export-markdown"
+import { downloadTask, getTaskFileName, getTaskMarkdownString } from "../../integrations/misc/export-markdown"
 import { resolveDefaultSaveUri, saveLastExportPath } from "../../utils/export"
 import { getTheme } from "../../integrations/theme/getTheme"
 import WorkspaceTracker from "../../integrations/workspace/WorkspaceTracker"
@@ -103,6 +103,7 @@ import { getNonce } from "./getNonce"
 import { getUri } from "./getUri"
 import { REQUESTY_BASE_URL } from "../../shared/utils/requesty"
 import { validateAndFixToolResultIds } from "../task/validateToolResultIds"
+import { initProviderSettingsFromDefault } from "../config/importExport"
 
 /**
  * https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -1857,6 +1858,11 @@ export class ClineProvider
 		}
 	}
 
+	async getTaskMarkdown(id: string): Promise<string> {
+		const { apiConversationHistory } = await this.getTaskWithId(id)
+		return await getTaskMarkdownString(apiConversationHistory)
+	}
+
 	/* Condenses a task's message history to use fewer tokens. */
 	async condenseTaskContext(taskId: string) {
 		let task: Task | undefined
@@ -2718,6 +2724,13 @@ export class ClineProvider
 		await this.providerSettingsManager.resetAllConfigs()
 		await this.customModesManager.resetCustomModes()
 		await this.removeClineFromStack()
+		//导入默认配置
+		const importOptions = {
+			providerSettingsManager: this.providerSettingsManager,
+			contextProxy: this.contextProxy,
+			customModesManager: this.customModesManager,
+		}
+		await initProviderSettingsFromDefault(importOptions)
 		await this.postStateToWebview()
 		await this.postMessageToWebview({ type: "action", action: "chatButtonClicked" })
 	}
